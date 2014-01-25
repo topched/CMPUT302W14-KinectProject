@@ -1,4 +1,4 @@
-Xbox one & Kinect Prject
+Kinect Project - Heart Patient Exercise 
 =========================
 
 Team Members:
