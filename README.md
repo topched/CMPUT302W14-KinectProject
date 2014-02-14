@@ -7,6 +7,7 @@ Team Members:
 *  Wayne Choi
 *  Valerie Sawyer 
 *  Kris Kushniruk
+*  Brian Trinh
 
 Client:
 *  Peter Wood
