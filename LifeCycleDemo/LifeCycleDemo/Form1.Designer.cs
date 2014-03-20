@@ -32,13 +32,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Exercise));
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timeLabel = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.patientVideo = new System.Windows.Forms.PictureBox();
             this.startButton = new System.Windows.Forms.Button();
             this.encourageLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.heartRateLabel = new System.Windows.Forms.Label();
             this.quitButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patientVideo)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -59,16 +59,16 @@
             this.timeLabel.TabIndex = 0;
             this.timeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // pictureBox1
+            // patientVideo
             // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(640, 480);
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
+            this.patientVideo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.patientVideo.InitialImage = null;
+            this.patientVideo.Location = new System.Drawing.Point(12, 12);
+            this.patientVideo.Name = "patientVideo";
+            this.patientVideo.Size = new System.Drawing.Size(640, 480);
+            this.patientVideo.TabIndex = 2;
+            this.patientVideo.TabStop = false;
+            this.patientVideo.Click += new System.EventHandler(this.patientVideo_Click);
             // 
             // startButton
             // 
@@ -137,18 +137,18 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(1584, 1161);
+            this.ClientSize = new System.Drawing.Size(1584, 1062);
             this.Controls.Add(this.quitButton);
             this.Controls.Add(this.heartRateLabel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.encourageLabel);
             this.Controls.Add(this.startButton);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.patientVideo);
             this.Controls.Add(this.timeLabel);
             this.Name = "Exercise";
             this.Text = "Exercise";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patientVideo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -158,7 +158,7 @@
 
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label timeLabel;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox patientVideo;
         private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.Label encourageLabel;
         private System.Windows.Forms.Label label3;

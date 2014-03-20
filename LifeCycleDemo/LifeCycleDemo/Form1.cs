@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,7 +9,8 @@ using System.Text;
 using System.IO.Ports;
 using System.Windows.Forms;
 using Microsoft.Kinect;
-using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace WindowsFormsApplication1
 {
@@ -19,6 +21,9 @@ namespace WindowsFormsApplication1
         System.Media.SoundPlayer finishSoundPlayer = new System.Media.SoundPlayer(@"C:\Windows\Media\tada.wav");
 
         bool isRunning = false;
+
+        private KinectSensor kinectSensor = null;
+        ColorImageFormat imageFormat = ColorImageFormat.RgbResolution640x480Fps30;
 
         // Keep track of the elapsed time.
         int timeLeft = 1800;
@@ -32,6 +37,68 @@ namespace WindowsFormsApplication1
         public Exercise()
         {
             InitializeComponent();
+            InitializePatientKinect();
+
+        }
+
+        private void InitializePatientKinect()
+        {
+
+            foreach (var potentialSensor in KinectSensor.KinectSensors)
+            {
+                if (potentialSensor.Status == KinectStatus.Connected)
+                {
+                    kinectSensor = potentialSensor;
+                    break;
+                }
+            }
+
+            if(kinectSensor != null)
+            {
+                kinectSensor.ColorStream.Enable(imageFormat);
+                kinectSensor.ColorFrameReady += kinectSensor_ColorFrameReady;
+                kinectSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
+                kinectSensor.SkeletonStream.Enable();
+                kinectSensor.DepthStream.Range = DepthRange.Default;
+                kinectSensor.SkeletonStream.EnableTrackingInNearRange = true;
+                kinectSensor.Start();
+            }
+
+        }
+
+        private void kinectSensor_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        {
+            ColorImageFrame frame = e.OpenColorImageFrame();
+
+            if (frame == null)
+            {
+                return;
+            }
+
+            //get the bitmap of the color frame
+            Bitmap bmap = ColorImageFrameToBitmap(frame);
+
+            //show the image to the user
+            patientVideo.Image = bmap;
+            
+        }
+
+        //This funtion converts the color image frame to a bitmap
+        private static Bitmap ColorImageFrameToBitmap(ColorImageFrame frame)
+        {
+            byte[] pixels = new byte[frame.PixelDataLength];
+            frame.CopyPixelDataTo(pixels);
+
+            Bitmap bmap = new Bitmap(frame.Width, frame.Height, PixelFormat.Format32bppRgb);
+            BitmapData bmapData = bmap.LockBits(new Rectangle(0, 0, frame.Width, frame.Height), ImageLockMode.WriteOnly, bmap.PixelFormat);
+            
+            IntPtr tmp = bmapData.Scan0;
+            Marshal.Copy(pixels, 0, tmp, frame.PixelDataLength);
+
+            bmap.UnlockBits(bmapData);
+
+            return bmap;
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -147,5 +214,12 @@ namespace WindowsFormsApplication1
             heartRate = 171;
             oX = 4;
         }
+
+        private void patientVideo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 }
