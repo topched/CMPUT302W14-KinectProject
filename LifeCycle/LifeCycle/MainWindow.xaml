@@ -35,10 +35,10 @@
                 			<GradientStop Color="#FF1F1F1D" Offset="0.746"/>
                 		</LinearGradientBrush>
                 	</Grid.Background>
-                	<k:KinectTileButton Content="Begin Workout" HorizontalAlignment="Left" Margin="22.086,719.831,0,0" VerticalAlignment="Top" Width="382.972" x:Name="beginWorkoutButton" Click="beginWorkoutButton_Click" Height="110.354"/>
-                	<k:KinectTileButton Content="Exit" HorizontalAlignment="Left" Margin="423.668,719.831,0,0" VerticalAlignment="Top" Width="382.972" x:Name="exitProgramButton" Click="beginWorkoutButton_Click" Height="110.354"/>
+                    <k:KinectTileButton Content="Begin Workout" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="22.086,719.831,0,0" VerticalAlignment="Top" Width="382.972" x:Name="beginWorkoutButton" Click="beginWorkoutButton_Click" Height="110.354" Background="#FF3E3930" Foreground="#FFDE6D0F"/>
+                	<k:KinectTileButton Content="Exit" HorizontalAlignment="Left" LabelBackground="Brown" Margin="423.668,719.831,0,0" VerticalAlignment="Top" Width="382.972" x:Name="exitProgramButton" Click="beginWorkoutButton_Click" Height="110.354" Background="#FF3E3930" Foreground="#FFDE6D0F"/>
                 	<Border  BorderThickness="2" BorderBrush="NavajoWhite" HorizontalAlignment="Left" Margin="449.184,170.518,0,0" VerticalAlignment="Top" Height="346.413" Width="327.801" Background="#FFF5EBEB"/>
-                	<Label Content="LifeCycle" HorizontalAlignment="Left" Margin="317.506,9.297,0,0" VerticalAlignment="Top" FontSize="48" FontWeight="Bold"/>
+                	<Label Content="LifeCycle" HorizontalAlignment="Left" Margin="287.661,-2.861,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Foreground="#FF3E3930"/>
                 	<Border  BorderThickness="2" BorderBrush="NavajoWhite" HorizontalAlignment="Left" Margin="59.472,170.518,0,0" VerticalAlignment="Top" Height="346.413" Width="327.801" Background="#FFF5EBEB"/>
                 </Grid>
 

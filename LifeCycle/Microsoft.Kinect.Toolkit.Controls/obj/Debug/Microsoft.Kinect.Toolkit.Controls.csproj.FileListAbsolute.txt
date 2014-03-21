@@ -25,6 +25,7 @@ C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\Kinect
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\KinectInteraction180_64.dll
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\Microsoft.Kinect.Toolkit.Controls.dll
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\Microsoft.Kinect.Toolkit.Controls.pdb
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.csprojResolveAssemblyReference.cache
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls_MarkupCompile.cache
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls_MarkupCompile.lref
