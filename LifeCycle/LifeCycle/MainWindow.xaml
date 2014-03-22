@@ -45,6 +45,7 @@
                         <StackPanel Orientation="Horizontal" Name="workoutTimeScrollContent" />
                     </k:KinectScrollViewer>
                     <Label x:Name="optionsTimeLabel" Content="Time" HorizontalAlignment="Left" Margin="94.407,226.889,0,0" VerticalAlignment="Top" Height="46.878" Width="96.542" FontSize="32" Foreground="#FFDE6D0F" Visibility="Hidden"/>
+                    <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="328,657,0,0" VerticalAlignment="Top" FontSize="36" FontWeight="Bold"/>
 
                 </Grid>
 

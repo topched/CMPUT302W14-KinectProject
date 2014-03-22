@@ -35,7 +35,7 @@ namespace LifeCycle
         private byte[] pixels;
 
         // variables for displays, timers etc.
-        public int secondsLeft = 1800;
+        public int secondsLeft = 1;
         public int minutesLeft = 30;
         public int heartRate = 135;
         public int OX = 1;
@@ -46,6 +46,7 @@ namespace LifeCycle
         public MainWindow()
         {
             InitializeComponent();
+            updateDisplays();
 
             //Initialize the senser chooser and UI
             this.sensorChooser = new KinectSensorChooser();
@@ -182,6 +183,7 @@ namespace LifeCycle
             {
                 dispatcherTimer.Stop();
                 beginWorkoutButton.IsEnabled = false;
+                MessageBoxResult result = MessageBox.Show("Workout completed - Great job!", "Success!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -189,8 +191,8 @@ namespace LifeCycle
         {
             //heartRateLabel.Content = heartRate + " BPM";
             //oxLabel.Content = OX;
-            //minutesLeft = (secondsLeft) / 60;
-            //timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
+            minutesLeft = (secondsLeft) / 60;
+            timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
         }
 
         /*      All Button Clicks Below                */

@@ -21,6 +21,7 @@ namespace LifeCycle
         public LoginWindow()
         {
             InitializeComponent();
+            FocusManager.SetFocusedElement(grid1, usernameBox);
         }
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
