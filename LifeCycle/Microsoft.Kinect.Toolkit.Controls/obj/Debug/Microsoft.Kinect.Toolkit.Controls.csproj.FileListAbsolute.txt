@@ -32,3 +32,15 @@ C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kin
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.g.resources
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.dll
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.pdb
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\KinectInteraction180_32.dll
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\KinectInteraction180_64.dll
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\Microsoft.Kinect.Toolkit.Controls.dll
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\Microsoft.Kinect.Toolkit.Controls.pdb
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.csprojResolveAssemblyReference.cache
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls_MarkupCompile.cache
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls_MarkupCompile.lref
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Themes\Generic.baml
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.g.resources
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.dll
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.pdb
