@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Timers;
 //using System.Windows.Documents;
 //using System.Windows.Input;
 //using System.Windows.Navigation;
@@ -47,7 +48,24 @@ namespace LifeCycle
             var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
             BindingOperations.SetBinding(this.kinectRegion, KinectRegion.KinectSensorProperty, regionSensorBinding);
 
+            //fill the time buttons for the workout time selection
+            for (int i = 1; i < 12; i++)
+            {
+                var timeSelectionButton = new KinectCircleButton{
+                    Content = i * 5,
+                    Height = 180
+                };
 
+                timeSelectionButton.Click += timeSelectionButton_Click;
+                workoutTimeScrollContent.Children.Add(timeSelectionButton);
+            }
+
+
+        }
+
+        void timeSelectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(sender.ToString());
         }
 
         /// <summary>
@@ -124,7 +142,6 @@ namespace LifeCycle
             frame.CopyPixelDataTo(pixels);
 
             //get the bitmap of the color frame
-            //Bitmap bmap = ColorImageFrameToBitmap(frame);
             this.outputImage = new WriteableBitmap(
                 frame.Width,frame.Height,96,96,PixelFormats.Bgr32,null);
 
@@ -136,9 +153,49 @@ namespace LifeCycle
             
         }
 
+        /*      All Button Clicks Below                */
+
+
         private void beginWorkoutButton_Click(object sender, RoutedEventArgs e)
         {
             beginWorkoutButton.Content = "Stop Workout";
+
+            //startWorkoutCountdownLabel.Content = "Ready";
+
+
+        }
+
+        private void showOptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+            //hide the start & quit buttons. Show the done button
+            beginWorkoutButton.Visibility = Visibility.Hidden;
+            exitProgramButton.Visibility = Visibility.Hidden;
+            closeOptionsButton.Visibility = Visibility.Visible;
+
+            //show the time label and scroll viewer
+            optionsTimeLabel.Visibility = Visibility.Visible;
+            selectTimeScrollViewer.Visibility = Visibility.Visible;
+
+        }
+
+        private void closeOptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            //hide the done button. Show the start & quit buttons
+            beginWorkoutButton.Visibility = Visibility.Visible;
+            exitProgramButton.Visibility = Visibility.Visible;
+            closeOptionsButton.Visibility = Visibility.Hidden;
+
+            //hide the time label and scroll viewer
+            optionsTimeLabel.Visibility = Visibility.Hidden;
+            selectTimeScrollViewer.Visibility = Visibility.Hidden;
+
+        }
+
+        private void exitProgramButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            //exit the program properly here
 
         }
 
