@@ -195,8 +195,14 @@ namespace LifeCycle
         private void exitProgramButton_Click(object sender, RoutedEventArgs e)
         {
 
-            //exit the program properly here
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to return to the login screen?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
 
+                var newWindow = new LoginWindow();
+                newWindow.Show();
+                this.Close();
+            }
         }
 
         
