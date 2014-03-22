@@ -34,6 +34,15 @@ namespace LifeCycle
         private WriteableBitmap outputImage;
         private byte[] pixels;
 
+        // variables for displays, timers etc.
+        public int secondsLeft = 1800;
+        public int minutesLeft = 30;
+        public int heartRate = 135;
+        public int OX = 1;
+
+        public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+        public bool workoutInProgress = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -43,6 +52,10 @@ namespace LifeCycle
             this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
             this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
             this.sensorChooser.Start();
+
+            // Set up timer ticks.
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1); // 1 second
 
             // Bind the sensor chooser's current sensor to the KinectRegion
             var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
@@ -153,15 +166,51 @@ namespace LifeCycle
             
         }
 
+        /// <summary>
+        /// Updates displays every second and handles ending the workout if time is up.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="sender"></param>
+        public void dispatcherTimer_Tick(object o, EventArgs sender)
+        {
+            if (secondsLeft > 0)
+            {
+                --secondsLeft;
+                updateDisplays();
+            }
+            else
+            {
+                dispatcherTimer.Stop();
+                beginWorkoutButton.IsEnabled = false;
+            }
+        }
+
+        public void updateDisplays()
+        {
+            //heartRateLabel.Content = heartRate + " BPM";
+            //oxLabel.Content = OX;
+            //minutesLeft = (secondsLeft) / 60;
+            //timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
+        }
+
         /*      All Button Clicks Below                */
 
 
         private void beginWorkoutButton_Click(object sender, RoutedEventArgs e)
         {
-            beginWorkoutButton.Content = "Stop Workout";
-
+            if (workoutInProgress == false)
+            {
+                dispatcherTimer.Start();
+                beginWorkoutButton.Content = "Stop Workout";
+                workoutInProgress = true;
+            }
             //startWorkoutCountdownLabel.Content = "Ready";
-
+            else
+            {
+                dispatcherTimer.Stop();
+                beginWorkoutButton.Content = "Begin Workout";
+                workoutInProgress = false;
+            }
 
         }
 
