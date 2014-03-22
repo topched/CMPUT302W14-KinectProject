@@ -1,7 +1,0 @@
-OX 95 78 02:32:03
-HR max: -2147483648
-HR min: 2147483647
-HR avg: 0
-OX max: 95
-OX min: 95
-OX avg: 95

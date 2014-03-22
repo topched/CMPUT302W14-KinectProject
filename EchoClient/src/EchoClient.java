@@ -60,6 +60,7 @@ public class EchoClient {
             }
         }
 
+
         
         // close IO streams, then socket
         System.err.println("Closing connection to " + host);
@@ -67,16 +68,5 @@ public class EchoClient {
         in.close();
         socket.close();
     }
-    // listen to socket and print everything that server broadcasts
-    public void listen() {
-        String s;
-        while ((s = in.readLine()) != null) {
-            
-        }
-        out.close();
-        in.close();
-        try                 { socket.close();      }
-        catch (Exception e) { e.printStackTrace(); }
-        System.err.println("Closed client socket");
-    }
+
 }
