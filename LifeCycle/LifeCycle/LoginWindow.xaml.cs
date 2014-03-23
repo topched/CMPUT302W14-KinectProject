@@ -35,7 +35,9 @@ namespace LifeCycle
             }
             else if (usernameBox.Text == "clinician" && passwordBox.Text == "password")
             {
-                // open a different window
+                var newWindow = new ClinicianWindow();
+                newWindow.Show();
+                this.Close();// open a different window
             }
             else
             {
