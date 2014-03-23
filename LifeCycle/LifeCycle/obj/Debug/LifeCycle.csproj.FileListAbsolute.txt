@@ -66,3 +66,7 @@ C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\LifeCycle\
 C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\LifeCycle\bin\Debug\Microsoft.Kinect.Toolkit.pdb
 C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\LifeCycle\obj\Debug\ClinicianWindow.baml
 C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\LifeCycle\obj\Debug\ClinicianWindow.g.cs
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\LifeCycle\obj\Debug\Clinician.baml
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\LifeCycle\obj\Debug\ClinicianWindow.baml
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\LifeCycle\obj\Debug\Clinician.g.cs
+C:\Users\nebbish\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\LifeCycle\obj\Debug\ClinicianWindow.g.cs

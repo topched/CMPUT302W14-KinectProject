@@ -47,6 +47,8 @@
                     </k:KinectScrollViewer>
                     <Label x:Name="optionsTimeLabel" Content="Time" HorizontalAlignment="Left" Margin="94.407,226.889,0,0" VerticalAlignment="Top" Height="46.878" Width="96.542" FontSize="32" Foreground="#FFDE6D0F" Visibility="Hidden"/>
                     <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="328,112,0,0" VerticalAlignment="Top" FontSize="36" FontWeight="Bold" Grid.Row="1"/>
+                    <Label x:Name="heartRateLabel" Content="-- BPM" HorizontalAlignment="Left" Margin="116,81,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF468BA4"/>
+                    <Label x:Name="oxygenSatLabel" Content="-- %" HorizontalAlignment="Left" Margin="116,10,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF468BA4"/>
 
                 </Grid>
 

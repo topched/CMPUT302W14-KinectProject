@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -34,8 +35,14 @@ namespace LifeCycle
         private WriteableBitmap outputImage;
         private byte[] pixels;
 
-        // variables for displays, timers etc.
-        public int secondsLeft = 1;
+        public string filePathHR = @"..\..\HR.txt";
+        public string filePathOX = @"..\..\OX.txt";
+        public string heartLine;
+        public string oxygenLine;
+        public StreamReader heartRateFile = null;
+        public StreamReader oxygenSatFile = null;
+        
+        public int secondsLeft = 1800;
         public int minutesLeft = 30;
         public int heartRate = 135;
         public int OX = 1;
@@ -46,6 +53,13 @@ namespace LifeCycle
         public MainWindow()
         {
             InitializeComponent();
+
+            // Set up Streams from which to read heartrate and saturation data.
+            if (File.Exists(filePathHR))
+                heartRateFile = new StreamReader(filePathHR);
+            if (File.Exists(filePathOX))
+                oxygenSatFile = new StreamReader(filePathOX);
+
             updateDisplays();
 
             //Initialize the senser chooser and UI
@@ -186,11 +200,32 @@ namespace LifeCycle
                 MessageBoxResult result = MessageBox.Show("Workout completed - Great job!", "Success!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
-
+        /// <summary>
+        /// Updates the heartRate, oxygenSat, and timer displays once a second.
+        /// </summary>
         public void updateDisplays()
         {
-            //heartRateLabel.Content = heartRate + " BPM";
-            //oxLabel.Content = OX;
+            // Display the heartrate.
+            if ((heartLine = heartRateFile.ReadLine()) != null)
+            {
+                string[] hRWords = heartLine.Split(' ');
+                if (hRWords[0] == "HR")
+                    heartRateLabel.Content = hRWords[1] + " BPM";
+            }
+            else
+                heartRateLabel.Content = "-- BPM";
+
+           //  Display the oxygen sat.
+            if ((oxygenLine = oxygenSatFile.ReadLine()) != null)
+            {
+                string[] o2Words = oxygenLine.Split(' ');
+                if (o2Words[0] == "OX")
+                    oxygenSatLabel.Content = o2Words[1] + " %";
+            }
+            else
+                heartRateLabel.Content = "-- %";
+
+            // Display the remaining time.
             minutesLeft = (secondsLeft) / 60;
             timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
         }
@@ -243,13 +278,22 @@ namespace LifeCycle
 
         }
 
+        /// <summary>
+        /// User presses the exit button to quit the workout - close streams and this window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void exitProgramButton_Click(object sender, RoutedEventArgs e)
         {
 
             MessageBoxResult result = MessageBox.Show("Are you sure you want to return to the login screen?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
+                // Close the streamReaders.
+                heartRateFile.Close();
+                oxygenSatFile.Close();
 
+                // Close this window and open the loginWindow.
                 var newWindow = new LoginWindow();
                 newWindow.Show();
                 this.Close();
