@@ -46,6 +46,7 @@ public class ChatServer {
 			Connection connection = new Connection(clientSocket);
 			connections.add(connection);
 			connection.start();
+			connection.getMessage();
 		}
 		
 

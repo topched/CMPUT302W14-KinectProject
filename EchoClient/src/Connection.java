@@ -12,57 +12,39 @@ public class Connection extends Thread {
 	private In in;
 	private String message;     // one line buffer
 
-	public Connection(Socket socket) {
+	public Connection(Socket socket) throws FileNotFoundException {
 		in  = new In(socket);
 		out = new Out(socket);
 		this.socket = socket;
 
+		String fname = new SimpleDateFormat("yyyy-MM-dd hh-mm-ss'.txt'").format(new Date());
+		PrintStream fout = new PrintStream(new FileOutputStream(fname));
+		System.setOut(fout);
 	}
 
 	public void println(String s) { out.println(s); }
 
-	public void run() {
-		//sets output stream to fout which will be appended to (date/time).txt
-		//may want to add user name in the future
-		String fname = new SimpleDateFormat("yyyy-MM-dd hh-mm-ss'.txt'").format(new Date());
+    public void run() {
 		String tstamp = new SimpleDateFormat("hh:mm:ss").format(new Date());
-		PrintStream fout;
-		try {
-			fout = new PrintStream(new FileOutputStream(fname));
-			System.setOut(fout);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 
-		String s;
-		while ((s = in.readLine()) != null) {
-			setMessage(s);
-		}
-		out.close();
-		in.close();
-		try                 { socket.close();      }
-		catch (Exception e) { e.printStackTrace(); }
-		System.err.println("closing socket");
 		// waits for data and reads it in until connection dies
 		// readLine() blocks until the server receives a new line from client
+		String s;
 		int hrinc = 0;
 		int oxinc = 0;
 
 		//if flag then OX, if flag = 0 then HR
 		int[] hrArray= new int[1000];
 		int[] oxArray= new int[1000];
-		while ((s = in.readLine()) != null) {
-			out.println(s);
 
+        while ((s = in.readLine()) != null) {
+            setMessage(s);
 			//displays err output for testing
 			// System.err.println("Line is: "+s+" "+tstamp);
 
 			//parses for 'HR' prefix. Records and prints HR data
 			if (s.contains("HR")){
 				String[] hrStr = s.split("HR ");
-
-
 
 				StringBuilder builder = new StringBuilder();
 				for(String t : hrStr) {
@@ -72,18 +54,18 @@ public class Connection extends Thread {
 				System.err.println("HR "+builder.toString()+"   |"+tstamp);
 				System.out.println("HR "+builder.toString()+"   |"+tstamp);
 
-
+				
 				int hrval = Integer.parseInt(builder.toString());
 				//numbers[i] = Integer.parseInt(hrStr[i]);
-
+				
 				// **
 				//System.err.println("Number is: "+hrval+" Inc is: "+hrinc);
-
+				
 				// Heartrate value of 0should usually be ignored since it it likely 
 				// attributed to equipment issues and not death.
 				if(hrval !=0){
-					hrArray[hrinc] = hrval;
-					hrinc++;
+				hrArray[hrinc] = hrval;
+				hrinc++;
 				}
 			}
 			//parses for 'OX' prefix. Records and prints OX data.
@@ -102,18 +84,22 @@ public class Connection extends Thread {
 				System.out.println("OX "+builder.toString()+"|"+tstamp);
 
 				//int oxval = Integer.parseInt(builder.toString());
-
+				
 				//**
 				//System.err.println("Number is: "+oxNum+" Inc is: "+oxinc);
 				oxArray[oxinc] = oxNum;
 				oxinc++;
 
 			}
-
-		}
+        }
 		HRMath(hrArray, hrinc);
 		OXMath(oxArray,oxinc);
-	}
+        out.close();
+        in.close();
+        try                 { socket.close();      }
+        catch (Exception e) { e.printStackTrace(); }
+        System.err.println("closing socket");
+    }
 	public static void HRMath(int[] array,int length){
 		int hrmin = Integer.MAX_VALUE;
 		int hrmax = Integer.MIN_VALUE;

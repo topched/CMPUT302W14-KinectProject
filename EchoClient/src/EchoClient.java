@@ -59,8 +59,7 @@ public class EchoClient {
                 socket.close();
             }
         }
-
-
+        String userinput;
         
         // close IO streams, then socket
         System.err.println("Closing connection to " + host);
@@ -68,5 +67,6 @@ public class EchoClient {
         in.close();
         socket.close();
     }
+    // listen to socket and print everything that server broadcasts
 
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en-us" >
+<head>
+<title>Log in | LifeCycle</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css" />
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+<body background="http://test.scripts.psu.edu/users/m/p/mpc5185/BlueFadeBackground2.png" style ="background-repeat: repeat-x">
+
+<body class="login">
+<div id="container">
+    <div id="header">
+        <div id="branding">
+<h1 id="site-name" align="center">LifeCycle</h1>
+        </div>
+    </div>
+
+    <div id="content" class="colM">
+<div id="content-main">
+<form action="/admin/" method="post" id="login-form"><input type='hidden' name='csrfmiddlewaretoken' value='aFH7BZ3QVnIGIWWfGEmRfzEWUo3GUe4j' />
+  <div class="form-row">
+    
+    <center><label for="id_username" class="required">Username:</label> <input id="id_username" maxlength="254" name="username" type="text" />
+  </div></center>
+  <div class="form-row">
+    
+    <center><label for="id_password" class="required">Password:</label> <input id="id_password" name="password" type="password" />
+    <input type="hidden" name="this_is_the_login_form" value="1" />
+    <input type="hidden" name="next" value="/admin/" />
+  </div></center>
+  <div class="submit-row">
+    <center><label>&nbsp;</label><input type="submit" value="Log in" />
+	<a href="kinect/patientstats/">Link text</a>
+  </div></center>
+</form>
+
+<script type="text/javascript">
+document.getElementById('id_username').focus()
+</script>
+</div>
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>
