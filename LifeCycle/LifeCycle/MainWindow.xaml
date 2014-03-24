@@ -16,10 +16,10 @@
                 		<RowDefinition Height="950*"/>
                 		<RowDefinition Height="223*"/>
                 	</Grid.RowDefinitions>
-                    <Border BorderThickness="4" BorderBrush="Chocolate" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,10,0,0" Height="480" Width="640">
+                    <Border BorderThickness="4" BorderBrush="Chocolate" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,10" Height="480" Width="640">
                         <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="640" Height="480" Margin="-14,6,6,-14"/>
                     </Border>
-                    <Border BorderThickness="4" BorderBrush="Chocolate" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,-3" Height="480" Width="640" Grid.RowSpan="2">
+                    <Border BorderThickness="4" BorderBrush="Chocolate" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,10,0,10" Height="480" Width="640" Grid.RowSpan="2">
                         <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectClinitianFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="640" Height="480" Margin="-4,6,-4,-14"/>
                     </Border>
                     <k:KinectTileButton Content="Options" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="182,535,0,0" VerticalAlignment="Top" Width="327" x:Name="showOptionsButton" Click="showOptionsButton_Click" Height="129" Background="#FF3E3930" Foreground="#FFDE6D0F" FontSize="48"/>
@@ -46,7 +46,7 @@
                         <StackPanel Orientation="Horizontal" Name="workoutTimeScrollContent" />
                     </k:KinectScrollViewer>
                     <Label x:Name="optionsTimeLabel" Content="Time" HorizontalAlignment="Left" Margin="94.407,226.889,0,0" VerticalAlignment="Top" Height="46.878" Width="96.542" FontSize="32" Foreground="#FFDE6D0F" Visibility="Hidden"/>
-                    <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="287.661,293.899,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Background="#FF1F1D1F" Foreground="#FFBD5F11"/>
+                    <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="287.661,293.899,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Background="#FF1F1D1F" Foreground="#FFBD5F11" Visibility="Hidden"/>
                     <Label x:Name="heartRateLabel" Content="-- BPM" HorizontalAlignment="Left" Margin="116,81,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF468BA4"/>
                     <Label x:Name="oxygenSatLabel" Content="-- %" HorizontalAlignment="Left" Margin="116,10,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF468BA4"/>
 

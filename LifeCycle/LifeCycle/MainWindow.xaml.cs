@@ -22,6 +22,11 @@ using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
 using System.Diagnostics;
 using System.Threading;
+//for web sockets
+using Fleck;
+//for regular sockets
+using System.Net;
+using System.Net.Sockets;
 
 namespace LifeCycle
 {
@@ -49,28 +54,38 @@ namespace LifeCycle
         public int heartRate = 135;
         public int OX = 1;
 
-        
-
         public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public bool workoutInProgress = false;
         public Process process = new Process();
 
+        //for the websockets
+        private List<IWebSocketConnection> sockets;
 
+        //for regular sockets
+        private AsyncCallback socketWorkerCallback;
+        public Socket socketListener;
+        public Socket socketWorker;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            
+            //Used to start a websocket server
+            //InitializeWebSockets();
+
+            //used to start socket server
+            InitializeSockets();
+         
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.FileName = "java";
-            process.StartInfo.Arguments = @"-cp C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\EchoClient\src\ ChatClient Brian 142.244.208.133";
-            process.Start();
-            
-            process.BeginOutputReadLine();
+
+            //Cant hardcode a file path like this 
+            //process.StartInfo.Arguments = @"-cp C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\EchoClient\src\ ChatClient Brian 142.244.208.133";
+            //process.Start(); 
+            //process.BeginOutputReadLine();
 
             // Set up Streams from which to read heartrate and saturation data.
             if (File.Exists(filePathHR))
@@ -95,7 +110,7 @@ namespace LifeCycle
             BindingOperations.SetBinding(this.kinectRegion, KinectRegion.KinectSensorProperty, regionSensorBinding);
 
             //fill the time buttons for the workout time selection
-            for (int i = 1; i < 12; i++)
+            for (int i = 1; i < 13; i++)
             {
                 var timeSelectionButton = new KinectCircleButton{
                     Content = i * 5,
@@ -109,10 +124,130 @@ namespace LifeCycle
 
         }
 
-        void timeSelectionButton_Click(object sender, RoutedEventArgs e)
+        private void InitializeSockets()
         {
-            MessageBox.Show(sender.ToString());
+            try
+            {
+                //create listening socket
+                socketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
+                IPEndPoint iplocal = new IPEndPoint(addy, 8444);
+                //bind to local IP Address
+                socketListener.Bind(iplocal);
+                //start listening -- 4 is max connections queue, can be changed
+                socketListener.Listen(4);
+                //create call back for client connections -- aka maybe recieve video here????
+                socketListener.BeginAccept(new AsyncCallback(OnSocketConnection), null);
+            }
+            catch(SocketException e)
+            {
+                //something went wrong
+                MessageBox.Show(e.Message);
+            }
+
         }
+
+        private void OnSocketConnection(IAsyncResult asyn)
+        {
+            try
+            {
+                socketWorker = socketListener.EndAccept(asyn);
+
+                WaitForData(socketWorker);
+            }
+            catch (ObjectDisposedException)
+            {
+                System.Diagnostics.Debugger.Log(0, "1", "\n OnSocketConnection: Socket has been closed\n");
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+        }
+
+
+       public class SocketPacket
+       {
+           public System.Net.Sockets.Socket packetSocket;
+           public byte[] dataBuffer = new byte[1];
+       }
+
+        private void WaitForData(System.Net.Sockets.Socket soc)
+        {
+            try
+            {
+                if (socketWorkerCallback == null)
+                {
+                    socketWorkerCallback = new AsyncCallback(OnDataReceived);
+                }
+
+                SocketPacket sockpkt = new SocketPacket();
+                sockpkt.packetSocket = soc;
+                //start listening for data
+                soc.BeginReceive(sockpkt.dataBuffer, 0, sockpkt.dataBuffer.Length, SocketFlags.None, socketWorkerCallback, sockpkt);
+            }
+            catch(SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private void OnDataReceived(IAsyncResult asyn)
+        {
+            try
+            {
+                SocketPacket socketID = (SocketPacket)asyn.AsyncState;
+                //end receive
+                int end = 0;
+                end = socketID.packetSocket.EndReceive(asyn);
+
+                //just getting simple text right now -- needs to be changed
+                char[] chars = new char[end + 1];
+                System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
+                int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
+                System.String tmp = new System.String(chars);
+                MessageBox.Show("Got stuff " + tmp);
+
+
+                WaitForData(socketWorker);
+            }
+            catch(ObjectDisposedException)
+            {
+                System.Diagnostics.Debugger.Log(0, "1", "\nOnDataReceived: Socket has been closed\n");
+            }
+            catch(SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+        }
+
+        //Computers running on the same network should be able to get at this. -- not used for anything
+        private void InitializeWebSockets()
+        {
+            sockets = new List<IWebSocketConnection>();
+
+            var server = new WebSocketServer("ws://localhost:8181");
+
+            server.Start(socket =>
+            {
+
+                socket.OnOpen = () =>
+                {
+                    sockets.Add(socket);
+                };
+                socket.OnClose = () =>
+                {
+                    sockets.Remove(socket);
+                };
+                socket.OnMessage = message =>
+                {
+                    MessageBox.Show(message);
+                };
+            });
+        }
+
 
         /// <summary>
         /// Called when the KinectSensorChooser gets a new sensor
@@ -132,6 +267,7 @@ namespace LifeCycle
                     e.OldSensor.SkeletonStream.EnableTrackingInNearRange = false;
                     e.OldSensor.DepthStream.Disable();
                     e.OldSensor.SkeletonStream.Disable();
+                    e.OldSensor.ColorStream.Disable();
                 }
                 catch (InvalidOperationException)
                 {
@@ -177,26 +313,35 @@ namespace LifeCycle
 
         void NewSensor_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
         {
-            ColorImageFrame frame = e.OpenColorImageFrame();
-
-            if (frame == null)
+            using (ColorImageFrame frame = e.OpenColorImageFrame())
             {
-                return;
-            }
 
-            this.pixels = new byte[frame.PixelDataLength];
-            frame.CopyPixelDataTo(pixels);
+                if (frame == null)
+                {
+                    return;
+                }
 
-            //get the bitmap of the color frame
-            this.outputImage = new WriteableBitmap(
-                frame.Width,frame.Height,96,96,PixelFormats.Bgr32,null);
+                this.pixels = new byte[frame.PixelDataLength];
+                frame.CopyPixelDataTo(pixels);
 
-            this.outputImage.WritePixels(
-                new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
+                //string tmp = pixels.Length.ToString();
+                //MessageBox.Show(tmp);
 
-            //show the patient feed video
-            this.kinectPatientFeed.Source = this.outputImage;
-            
+                //pixels appears to be 1228800 bytes long
+
+                //get the bitmap of the color frame
+                this.outputImage = new WriteableBitmap(
+                    frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
+
+                this.outputImage.WritePixels(
+                    new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
+
+                //show the patient feed video
+                this.kinectPatientFeed.Source = this.outputImage;
+
+            };
+
+           
         }
 
         /// <summary>
@@ -258,6 +403,13 @@ namespace LifeCycle
                 dispatcherTimer.Start();
                 beginWorkoutButton.Content = "Stop Workout";
                 workoutInProgress = true;
+
+                //hide the options button during the workout
+                showOptionsButton.Visibility = Visibility.Hidden;
+
+                //show the timer label
+                timerLabel.Visibility = Visibility.Visible;
+
             }
             //startWorkoutCountdownLabel.Content = "Ready";
             else
@@ -265,6 +417,12 @@ namespace LifeCycle
                 dispatcherTimer.Stop();
                 beginWorkoutButton.Content = "Begin Workout";
                 workoutInProgress = false;
+
+                //re-show the options button
+                showOptionsButton.Visibility = Visibility.Visible;
+
+                //hide the timer label
+                timerLabel.Visibility = Visibility.Hidden;
             }
 
         }
@@ -311,11 +469,19 @@ namespace LifeCycle
                 heartRateFile.Close();
                 oxygenSatFile.Close();
 
+                //Close the kinect properly
+                this.sensorChooser.Stop();
+
                 // Close this window and open the loginWindow.
                 var newWindow = new LoginWindow();
                 newWindow.Show();
                 this.Close();
             }
+        }
+
+        void timeSelectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(sender.ToString());
         }
 
         
