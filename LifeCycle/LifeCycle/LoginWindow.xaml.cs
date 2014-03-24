@@ -27,13 +27,13 @@ namespace LifeCycle
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
             //TODO - this should check in the database of users - for now, dummy users.
-            if (usernameBox.Text == "patient1" && passwordBox.Text == "password")
+            if (usernameBox.Text == "patient1" && passwordBox.Password == "password")
             {
                 var newWindow = new MainWindow();
                 newWindow.Show();
                 this.Close();
             }
-            else if (usernameBox.Text == "clinician" && passwordBox.Text == "password")
+            else if (usernameBox.Text == "clinician" && passwordBox.Password == "passwordc")
             {
                 var newWindow = new ClinicianWindow();
                 newWindow.Show();

@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="LifeCycle.MainWindow"
         Title="MainWindow" Height="1200" Width="1600" Background="#FFF7F1F1">
 
-
+    <ScrollViewer>
     <Grid Margin="0,10,2,-30">
         <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi" />
         <k:KinectRegion x:Name="kinectRegion" Margin="-49,195,49,0" Background="#FF746E6E">
@@ -46,7 +46,7 @@
                         <StackPanel Orientation="Horizontal" Name="workoutTimeScrollContent" />
                     </k:KinectScrollViewer>
                     <Label x:Name="optionsTimeLabel" Content="Time" HorizontalAlignment="Left" Margin="94.407,226.889,0,0" VerticalAlignment="Top" Height="46.878" Width="96.542" FontSize="32" Foreground="#FFDE6D0F" Visibility="Hidden"/>
-                    <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="328,112,0,0" VerticalAlignment="Top" FontSize="36" FontWeight="Bold" Grid.Row="1"/>
+                    <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="287.661,293.899,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Background="#FF1F1D1F" Foreground="#FFBD5F11"/>
                     <Label x:Name="heartRateLabel" Content="-- BPM" HorizontalAlignment="Left" Margin="116,81,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF468BA4"/>
                     <Label x:Name="oxygenSatLabel" Content="-- %" HorizontalAlignment="Left" Margin="116,10,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF468BA4"/>
 
@@ -60,4 +60,5 @@
         </k:KinectRegion>
 
     </Grid>
+    </ScrollViewer>
 </Window>

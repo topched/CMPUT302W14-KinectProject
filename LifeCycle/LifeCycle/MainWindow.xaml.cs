@@ -20,6 +20,8 @@ using System.Runtime.InteropServices;
 using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit;
 using Microsoft.Kinect.Toolkit.Controls;
+using System.Diagnostics;
+using System.Threading;
 
 namespace LifeCycle
 {
@@ -34,7 +36,7 @@ namespace LifeCycle
 
         private WriteableBitmap outputImage;
         private byte[] pixels;
-
+        
         public string filePathHR = @"..\..\HR.txt";
         public string filePathOX = @"..\..\OX.txt";
         public string heartLine;
@@ -47,30 +49,46 @@ namespace LifeCycle
         public int heartRate = 135;
         public int OX = 1;
 
+        
+
         public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public bool workoutInProgress = false;
+        public Process process = new Process();
+
+
 
         public MainWindow()
         {
             InitializeComponent();
+
+            
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.FileName = "java";
+            process.StartInfo.Arguments = @"-cp C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\EchoClient\src\ ChatClient Brian 142.244.208.133";
+            process.Start();
+            
+            process.BeginOutputReadLine();
 
             // Set up Streams from which to read heartrate and saturation data.
             if (File.Exists(filePathHR))
                 heartRateFile = new StreamReader(filePathHR);
             if (File.Exists(filePathOX))
                 oxygenSatFile = new StreamReader(filePathOX);
-
-            updateDisplays();
-
+            
+            //updateDisplays();
+            
+            // Set up timer ticks.
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1); // 1 second
+            
             //Initialize the senser chooser and UI
             this.sensorChooser = new KinectSensorChooser();
             this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
             this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
             this.sensorChooser.Start();
-
-            // Set up timer ticks.
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1); // 1 second
 
             // Bind the sensor chooser's current sensor to the KinectRegion
             var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
@@ -200,12 +218,12 @@ namespace LifeCycle
                 MessageBoxResult result = MessageBox.Show("Workout completed - Great job!", "Success!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
-        /// <summary>
-        /// Updates the heartRate, oxygenSat, and timer displays once a second.
-        /// </summary>
+
+        
         public void updateDisplays()
         {
-            // Display the heartrate.
+            /*/ Display the heartrate.
+            heartRateFile = process.StandardOutput;
             if ((heartLine = heartRateFile.ReadLine()) != null)
             {
                 string[] hRWords = heartLine.Split(' ');
@@ -221,9 +239,9 @@ namespace LifeCycle
                 string[] o2Words = oxygenLine.Split(' ');
                 if (o2Words[0] == "OX")
                     oxygenSatLabel.Content = o2Words[1] + " %";
-            }
+            } 
             else
-                heartRateLabel.Content = "-- %";
+                heartRateLabel.Content = "-- %"; */
 
             // Display the remaining time.
             minutesLeft = (secondsLeft) / 60;
