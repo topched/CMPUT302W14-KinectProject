@@ -91,8 +91,8 @@ AppPackages/
 # Others
 [Bb]in
 [Oo]bj
-LifeCycle/bin/*
-LifeCycle/obj/*
+LifeCycle\bin\*
+LifeCycle\obj\*
 sql
 TestResults
 [Tt]est[Rr]esult*
