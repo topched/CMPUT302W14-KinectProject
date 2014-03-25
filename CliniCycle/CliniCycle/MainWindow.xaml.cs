@@ -34,13 +34,7 @@ namespace CliniCycle
         public MainWindow()
         {
             this.InitializeComponent();
-
-            //Initialize the senser chooser and UI
-            this.sensorChooser = new KinectSensorChooser();
-            this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
-            this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
-            this.sensorChooser.Start();
-
+            Loaded += OnLoaded;
 
             // Insert code required on object creation below this point.
 
@@ -48,6 +42,19 @@ namespace CliniCycle
 
 
         }
+
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            this.sensorChooser = new KinectSensorChooser();
+            this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
+            this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
+            this.sensorChooser.Start();
+
+            // Bind the sensor chooser's current sensor to the KinectRegion
+            var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
+            BindingOperations.SetBinding(this.kinectRegion, KinectRegion.KinectSensorProperty, regionSensorBinding);
+        }
+
         /// <summary>
         /// Called when the KinectSensorChooser gets a new sensor
         /// </summary>
