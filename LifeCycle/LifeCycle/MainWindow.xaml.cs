@@ -94,6 +94,8 @@ namespace LifeCycle
                 oxygenSatFile = new StreamReader(filePathOX);
             
             //updateDisplays();
+            minutesLeft = (secondsLeft) / 60;
+            timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
             
             // Set up timer ticks.
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
@@ -110,11 +112,14 @@ namespace LifeCycle
             BindingOperations.SetBinding(this.kinectRegion, KinectRegion.KinectSensorProperty, regionSensorBinding);
 
             //fill the time buttons for the workout time selection
-            for (int i = 1; i < 13; i++)
+            SolidColorBrush brush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF01A2E8"));
+            for (int i = 1; i < 7; i++)
             {
                 var timeSelectionButton = new KinectCircleButton{
-                    Content = i * 5,
-                    Height = 180
+                    Content = i * 10,
+                    Height = 180,
+                    Foreground = brush
+                    
                 };
 
                 timeSelectionButton.Click += timeSelectionButton_Click;
@@ -408,7 +413,7 @@ namespace LifeCycle
                 showOptionsButton.Visibility = Visibility.Hidden;
 
                 //show the timer label
-                timerLabel.Visibility = Visibility.Visible;
+                //timerLabel.Visibility = Visibility.Visible;
 
             }
             //startWorkoutCountdownLabel.Content = "Ready";
@@ -422,7 +427,7 @@ namespace LifeCycle
                 showOptionsButton.Visibility = Visibility.Visible;
 
                 //hide the timer label
-                timerLabel.Visibility = Visibility.Hidden;
+               // timerLabel.Visibility = Visibility.Hidden;
             }
 
         }
@@ -461,27 +466,34 @@ namespace LifeCycle
         /// <param name="e"></param>
         private void exitProgramButton_Click(object sender, RoutedEventArgs e)
         {
+            // Close the streamReaders.
+            heartRateFile.Close();
+            oxygenSatFile.Close();
 
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to return to the login screen?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            //Close the kinect properly
+            this.sensorChooser.Stop();
+            this.Close();
+
+           /* MessageBoxResult result = MessageBox.Show("Are you sure you want to return to the login screen?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                // Close the streamReaders.
-                heartRateFile.Close();
-                oxygenSatFile.Close();
-
-                //Close the kinect properly
-                this.sensorChooser.Stop();
+                
 
                 // Close this window and open the loginWindow.
                 var newWindow = new LoginWindow();
                 newWindow.Show();
                 this.Close();
-            }
+            } */
         }
 
         void timeSelectionButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(sender.ToString());
+
+            string[] stuff = sender.ToString().Split(' ');
+            minutesLeft = Int32.Parse(stuff[1]);
+            secondsLeft = (minutesLeft) * 60;
+            timerLabel.Content = minutesLeft + "m " + 0 + "s";
+            
         }
 
         

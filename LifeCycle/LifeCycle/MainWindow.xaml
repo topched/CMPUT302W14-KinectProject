@@ -6,59 +6,57 @@
         Title="MainWindow" Height="1200" Width="1600" Background="#FFF7F1F1">
 
     <ScrollViewer>
-    <Grid Margin="0,10,2,-30">
-        <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi" />
-        <k:KinectRegion x:Name="kinectRegion" Margin="-49,195,49,0" Background="#FF746E6E">
+        <Grid Margin="0,10,2,-30">
+            <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi" />
+            <k:KinectRegion x:Name="kinectRegion" Margin="-49,195,49,0" Background="#FF746E6E">
 
-            <Grid Margin="-10,10,10,-10">
-                <Grid HorizontalAlignment="Left" Height="1173" VerticalAlignment="Top" Width="657.403" Margin="61,-213,0,0" Background="Black">
-                	<Grid.RowDefinitions>
-                		<RowDefinition Height="950*"/>
-                		<RowDefinition Height="223*"/>
-                	</Grid.RowDefinitions>
-                    <Border BorderThickness="4" BorderBrush="Chocolate" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,10" Height="480" Width="640">
-                        <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="640" Height="480" Margin="-14,6,6,-14"/>
-                    </Border>
-                    <Border BorderThickness="4" BorderBrush="Chocolate" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,10,0,10" Height="480" Width="640" Grid.RowSpan="2">
-                        <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectClinitianFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="640" Height="480" Margin="-4,6,-4,-14"/>
-                    </Border>
-                    <k:KinectTileButton Content="Options" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="182,535,0,0" VerticalAlignment="Top" Width="327" x:Name="showOptionsButton" Click="showOptionsButton_Click" Height="129" Background="#FF3E3930" Foreground="#FFDE6D0F" FontSize="48"/>
+                <Grid Margin="-10,10,10,-10">
+                    <Grid HorizontalAlignment="Left" Height="1173" VerticalAlignment="Top" Width="657.403" Margin="61,-213,0,0" Background="#FF01A2E8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="950*"/>
+                            <RowDefinition Height="223*"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderThickness="4" BorderBrush="White" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,10" Height="480" Width="640">
+                            <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="640" Height="480" Margin="-4" OpacityMask="Black"/>
+                        </Border>
+                        <Border BorderThickness="4" BorderBrush="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,10,0,10" Height="480" Width="640" Grid.RowSpan="2">
+                            <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectClinitianFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="640" Height="480" Margin="-4"/>
+                        </Border>
+                        <k:KinectTileButton Content="Options" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="182,535,0,0" VerticalAlignment="Top" Width="327" x:Name="showOptionsButton" Click="showOptionsButton_Click" Height="129" Background="White" Foreground="#FF01A2E8" FontSize="48" FontFamily="Microsoft Uighur"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Left" Height="1173" VerticalAlignment="Top" Width="951.597" Margin="718.403,-213,-80,0" Background="White">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="109*"/>
+                            <RowDefinition Height="65*"/>
+                        </Grid.RowDefinitions>
+                        <k:KinectTileButton Content="Begin Workout" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="43.086,189.573,0,0" VerticalAlignment="Top" Width="396.582" x:Name="beginWorkoutButton" Click="beginWorkoutButton_Click" Height="158.354" Background="#FF01A2E8" Foreground="White" Grid.Row="1" FontSize="48" FontFamily="Microsoft Uighur" />
+                        <k:KinectTileButton Content="Exit" HorizontalAlignment="Left" LabelBackground="Brown" Margin="471.668,189.367,0,0" VerticalAlignment="Top" Width="427.972" x:Name="exitProgramButton" Click="exitProgramButton_Click" Height="158.354" Background="#FF01A2E8" Foreground="White" Grid.Row="1" FontSize="48" FontFamily="Microsoft Uighur" />
+                        <Label Content="LifeCycle" HorizontalAlignment="Left" Margin="287.661,-2.861,0,0" VerticalAlignment="Top" FontSize="100" FontWeight="Bold" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur"/>
+                        <Label x:Name="startWorkoutCountdownLabel" Content=""  Margin="233,366,181.204,84" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="64" FontWeight="Black" Foreground="#FFDE6D0F" Width="419" d:IsHidden="True"/>
+                        <k:KinectTileButton Content="Done" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="287.661,174.831,0,0" VerticalAlignment="Top" Width="290.211" x:Name="closeOptionsButton" Click="closeOptionsButton_Click" Height="110.354" Background="#FF01A2E8" Foreground="White" Visibility="Hidden" Grid.Row="1"/>
+                        <Label x:Name="heartRateLabel" Content="-- BPM" HorizontalAlignment="Left" Margin="116,81,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur"/>
+                        <Label x:Name="oxygenSatLabel" Content="-- %" HorizontalAlignment="Left" Margin="116,10,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur"/>
+                        <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="116,630,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Background="White" Foreground="#FF01A2E8"/>
+                        <k:KinectScrollViewer x:Name="selectTimeScrollViewer" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Margin="10,203,0,0" VerticalAlignment="Top" Height="410" Width="905" Foreground="#FF01A2E8" Visibility="Hidden">
+                            <k:KinectScrollViewer.HoverBackground>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black" Offset="0"/>
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </k:KinectScrollViewer.HoverBackground>
+                            <StackPanel Orientation="Horizontal" x:Name="workoutTimeScrollContent" />
+                        </k:KinectScrollViewer>
+                        <Label x:Name="optionsTimeLabel" Content="Select workout length in minutes:" HorizontalAlignment="Left" Margin="94,203,0,0" VerticalAlignment="Top" Height="55" Width="484" FontSize="32" Foreground="#FF01A2E8" Visibility="Hidden"/>
+
+                    </Grid>
+
+
+
                 </Grid>
-                <Grid HorizontalAlignment="Left" Height="1173" VerticalAlignment="Top" Width="951.597" Margin="718.403,-213,-80,0">
-                	<Grid.RowDefinitions>
-                		<RowDefinition Height="109*"/>
-                		<RowDefinition Height="65*"/>
-                	</Grid.RowDefinitions>
-                    <Grid.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FFDE6D0F"/>
-                            <GradientStop Color="#FFDE6D0F" Offset="1"/>
-                            <GradientStop Color="#FF1F1F1D" Offset="0.151"/>
-                            <GradientStop Color="#FF1F1F1D" Offset="0.746"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <k:KinectTileButton Content="Begin Workout" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="43.086,189.573,0,0" VerticalAlignment="Top" Width="396.582" x:Name="beginWorkoutButton" Click="beginWorkoutButton_Click" Height="158.354" Background="#FF3E3930" Foreground="#FFDE6D0F" Grid.Row="1" FontSize="48" />
-                    <k:KinectTileButton Content="Exit" HorizontalAlignment="Left" LabelBackground="Brown" Margin="471.668,189.367,0,0" VerticalAlignment="Top" Width="427.972" x:Name="exitProgramButton" Click="exitProgramButton_Click" Height="158.354" Background="#FF3E3930" Foreground="#FFDE6D0F" Grid.Row="1" FontSize="48" />
-                    <Label Content="LifeCycle" HorizontalAlignment="Left" Margin="287.661,-2.861,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Foreground="#FF3E3930"/>
-                    <Label x:Name="startWorkoutCountdownLabel" Content=""  Margin="233,366,181.204,84" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="64" FontWeight="Black" Foreground="#FFDE6D0F" Width="419" d:IsHidden="True"/>
-                    <k:KinectTileButton Content="Done" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="287.661,174.831,0,0" VerticalAlignment="Top" Width="290.211" x:Name="closeOptionsButton" Click="closeOptionsButton_Click" Height="110.354" Background="#FF3E3930" Foreground="#FFDE6D0F" Visibility="Hidden" Grid.Row="1"/>
-                    <k:KinectScrollViewer x:Name="selectTimeScrollViewer" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Margin="213.159,202.963,0,0" VerticalAlignment="Top" Height="165" Width="540" Visibility="Hidden" Foreground="#FFDE6D0F">
-                        <StackPanel Orientation="Horizontal" Name="workoutTimeScrollContent" />
-                    </k:KinectScrollViewer>
-                    <Label x:Name="optionsTimeLabel" Content="Time" HorizontalAlignment="Left" Margin="94.407,226.889,0,0" VerticalAlignment="Top" Height="46.878" Width="96.542" FontSize="32" Foreground="#FFDE6D0F" Visibility="Hidden"/>
-                    <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="287.661,293.899,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Background="#FF1F1D1F" Foreground="#FFBD5F11" Visibility="Hidden"/>
-                    <Label x:Name="heartRateLabel" Content="-- BPM" HorizontalAlignment="Left" Margin="116,81,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF468BA4"/>
-                    <Label x:Name="oxygenSatLabel" Content="-- %" HorizontalAlignment="Left" Margin="116,10,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF468BA4"/>
-
-                </Grid>
 
 
+            </k:KinectRegion>
 
-            </Grid>
-
-
-        </k:KinectRegion>
-
-    </Grid>
+        </Grid>
     </ScrollViewer>
 </Window>

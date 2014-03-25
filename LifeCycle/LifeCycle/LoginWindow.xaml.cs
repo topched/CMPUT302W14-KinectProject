@@ -33,16 +33,10 @@ namespace LifeCycle
                 newWindow.Show();
                 this.Close();
             }
-            else if (usernameBox.Text == "clinician" && passwordBox.Password == "password")
-            {
-                var newWindow = new ClinicianWindow();
-                newWindow.Show();
-                this.Close();// open a different window
-            }
             else
             {
                 loginBlock.Foreground = Brushes.Red;
-                loginBlock.Text = "Username and/or password was incorrect.";
+                loginBlock.Text = "Username or password incorrect - Please try again!";
             }
         }
     }

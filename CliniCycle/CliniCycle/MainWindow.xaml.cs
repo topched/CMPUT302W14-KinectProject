@@ -14,28 +14,28 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Net.Sockets;
 
-namespace LifeCycle
+namespace CliniCycle
 {
-	/// <summary>
-	/// Interaction logic for ClinicianWindow.xaml
-	/// </summary>
-	public partial class ClinicianWindow : Window
-	{
+    /// <summary>
+    /// Interaction logic for ClinicianWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
 
         //for sockets
         Socket socketClient;
 
-		public ClinicianWindow()
-		{
-			this.InitializeComponent();
-			
-			// Insert code required on object creation below this point.
+        public MainWindow()
+        {
+            this.InitializeComponent();
+
+            // Insert code required on object creation below this point.
 
             CreateSocketConnection();
 
-            
-            
-		}
+
+
+        }
 
         private void CreateSocketConnection()
         {
@@ -96,5 +96,5 @@ namespace LifeCycle
 
 
 
-	}
+    }
 }
