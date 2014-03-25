@@ -22,6 +22,12 @@ namespace CliniCycle
     public partial class MainWindow : Window
     {
 
+        private KinectSensorChooser sensorChooser;
+        ColorImageFormat imageFormat = ColorImageFormat.RgbResolution640x480Fps30;
+
+        private WriteableBitmap outputImage;
+        private byte[] pixels;
+
         //for sockets
         Socket socketClient;
 
@@ -29,10 +35,110 @@ namespace CliniCycle
         {
             this.InitializeComponent();
 
+            //Initialize the senser chooser and UI
+            this.sensorChooser = new KinectSensorChooser();
+            this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
+            this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
+            this.sensorChooser.Start();
+
+
             // Insert code required on object creation below this point.
 
             CreateSocketConnection();
 
+
+        }
+        /// <summary>
+        /// Called when the KinectSensorChooser gets a new sensor
+        /// </summary>
+        /// <param name="sender">sender of the event</param>
+        /// <param name="e">event arguments</param>
+        void sensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
+        {
+
+            //MessageBox.Show(e.NewSensor == null ? "No Kinect" : e.NewSensor.Status.ToString());
+
+            if (e.OldSensor != null)
+            {
+                try
+                {
+                    e.OldSensor.DepthStream.Range = DepthRange.Default;
+                    e.OldSensor.SkeletonStream.EnableTrackingInNearRange = false;
+                    e.OldSensor.DepthStream.Disable();
+                    e.OldSensor.SkeletonStream.Disable();
+                    e.OldSensor.ColorStream.Disable();
+                }
+                catch (InvalidOperationException)
+                {
+                    // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
+                    // E.g.: sensor might be abruptly unplugged.
+
+                }
+            }
+
+            if (e.NewSensor != null)
+            {
+                try
+                {
+                    e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
+                    e.NewSensor.SkeletonStream.Enable();
+                    e.NewSensor.ColorStream.Enable(imageFormat);
+                    e.NewSensor.ColorFrameReady += NewSensor_ColorFrameReady;
+
+                    //add the color frames ready handler here
+
+                    try
+                    {
+                        e.NewSensor.DepthStream.Range = DepthRange.Near;
+                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = true;
+
+                        //seated mode could come in handy on the bike -- uncomment below
+                        //e.NewSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // Non Kinect for Windows devices do not support Near mode, so reset back to default mode.
+                        e.NewSensor.DepthStream.Range = DepthRange.Default;
+                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = false;
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
+                    // E.g.: sensor might be abruptly unplugged.
+                }
+            }
+        }
+
+        void NewSensor_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        {
+            using (ColorImageFrame frame = e.OpenColorImageFrame())
+            {
+
+                if (frame == null)
+                {
+                    return;
+                }
+
+                this.pixels = new byte[frame.PixelDataLength];
+                frame.CopyPixelDataTo(pixels);
+
+                //string tmp = pixels.Length.ToString();
+                //MessageBox.Show(tmp);
+
+                //pixels appears to be 1228800 bytes long
+
+                //get the bitmap of the color frame
+                this.outputImage = new WriteableBitmap(
+                    frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
+
+                this.outputImage.WritePixels(
+                    new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
+
+                //show the patient feed video
+                this.kinectPatientFeed.Source = this.outputImage;
+
+            };
 
 
         }
