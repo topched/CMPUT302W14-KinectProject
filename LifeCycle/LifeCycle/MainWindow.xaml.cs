@@ -117,7 +117,7 @@ namespace LifeCycle
             {
                 var timeSelectionButton = new KinectCircleButton{
                     Content = i * 10,
-                    Height = 180,
+                    Height = 90,
                     Foreground = brush
                     
                 };

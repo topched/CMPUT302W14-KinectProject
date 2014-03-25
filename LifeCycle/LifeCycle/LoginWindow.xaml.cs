@@ -37,6 +37,8 @@ namespace LifeCycle
             {
                 loginBlock.Foreground = Brushes.Red;
                 loginBlock.Text = "Username or password incorrect - Please try again!";
+                passwordBox.Password = "";
+                FocusManager.SetFocusedElement(grid1, passwordBox);
             }
         }
     }

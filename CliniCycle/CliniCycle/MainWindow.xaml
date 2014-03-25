@@ -6,7 +6,7 @@
 	x:Class="CliniCycle.MainWindow"
 	x:Name="Window"
 	Title="MainWindow"
-	Width="1024" Height="768">
+	Width="1024" Height="768" ResizeMode="CanMinimize">
 
     <Grid x:Name="LayoutRoot" OpacityMask="Black" RenderTransformOrigin="0.478,0.52" Background="White" Margin="0,0,2,1" >
         <Grid.ColumnDefinitions>
