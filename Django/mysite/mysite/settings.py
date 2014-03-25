@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 
 # Quick-start development settings - unsuitable for production
@@ -38,7 +39,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 	'django_tables2',
 	'django_extensions',
-	'polls',
 	'kinect',
 )
 
@@ -65,6 +65,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 ROOT_URLCONF = 'mysite.urls'
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
+
+AUTH_PROFILE_MODULE = 'mysite.user'
+
+LOGIN_REDIRECT_URL = 'patientstats/'
 
 
 # Database
@@ -95,3 +99,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_PATH = os.path.abspath(os.path.join(BASE_DIR, 'static'))
+STATICFILES_DIRS = (
+        STATIC_PATH,
+        )
+
+TEMPLATE_PATH = os.path.abspath(os.path.join(BASE_DIR, 'templates'))
+TEMPLATE_DIRS = (
+        TEMPLATE_PATH,
+        )

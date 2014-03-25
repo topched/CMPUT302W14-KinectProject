@@ -5,11 +5,14 @@ from django.template import RequestContext, loader
 from kinect.models import Patientstat
 
 def index(request):
-	return render_to_response('kinect/login.html')
+	context = RequestContext(request)
+	return render_to_response('login.html', context)
 	
 def patientstats(request):
-	return render(request, 'kinect/patientstats.html', {"patientstats": Patientstat.objects.all()})
+	context = RequestContext(request)
+	data = {'patientStats': Patientstat.objects.all()}
+	return render_to_response('patientstats.html', data, context);
 
 	
 
-# Create your views here.
+
