@@ -26,6 +26,7 @@ namespace CliniCycle
         ColorImageFormat imageFormat = ColorImageFormat.RgbResolution640x480Fps30;
 
         private WriteableBitmap outputImage;
+        private WriteableBitmap bigOutputImage;
         private byte[] pixels;
 
         //for sockets
@@ -181,6 +182,8 @@ namespace CliniCycle
             patientIDBlock.Text = "Satan";
             patientHeartrateBlock.Text = "666";
             patientOxygenSatBlock.Text = "99.99";
+            //This will need to be changed to switch the video feed
+            this.kinectPatientFeedLarge.Source = this.outputImage;
 
         }
 
