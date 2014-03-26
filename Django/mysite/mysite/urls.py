@@ -8,6 +8,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-	url(r'^$', 'kinect.views.index', name = 'index'),
+	url(r'^$', 'kinect.views.login', name = 'login'),
 	url(r'^kinect/', include('kinect.urls')),
 )

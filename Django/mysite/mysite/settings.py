@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 AUTH_PROFILE_MODULE = 'mysite.user'
 
-LOGIN_REDIRECT_URL = 'patientstats/'
+LOGIN_REDIRECT_URL = 'main/'
 
 
 # Database
