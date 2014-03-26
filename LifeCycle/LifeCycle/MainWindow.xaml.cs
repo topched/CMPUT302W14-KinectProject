@@ -68,6 +68,10 @@ namespace LifeCycle
         public Socket socketListener;
         public Socket socketWorker;
 
+        private AsyncCallback socketBioWorkerCallback;
+        public Socket socketBioListener;
+        public Socket bioSocketWorker;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -77,7 +81,8 @@ namespace LifeCycle
 
             //used to start socket server
             InitializeSockets();
-         
+            InitializeBioSockets();
+            
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
@@ -130,6 +135,118 @@ namespace LifeCycle
 
 
         }
+        /// <summary>
+        /// Sets the connection for biometrics.
+        /// </summary>
+        /// 
+        public class BioSocketPacket
+        {
+            public System.Net.Sockets.Socket packetSocket;
+            public byte[] dataBuffer = new byte[666];
+        }
+
+        private void InitializeBioSockets()
+        {
+            try
+            {
+                //create listening socket
+                socketBioListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
+                IPEndPoint iplocal = new IPEndPoint(addy, 4444);
+                //bind to local IP Address
+                socketBioListener.Bind(iplocal);
+                //start listening -- 4 is max connections queue, can be changed
+                socketBioListener.Listen(4);
+                //create call back for client connections -- aka maybe recieve video here????
+                socketBioListener.BeginAccept(new AsyncCallback(OnBioSocketConnection), null);
+            }
+            catch (SocketException e)
+            {
+                //something went wrong
+                MessageBox.Show(e.Message);
+            }
+
+        }
+        private void OnBioSocketConnection(IAsyncResult asyn)
+        {
+            try
+            {
+                bioSocketWorker = socketBioListener.EndAccept(asyn);
+
+                WaitForBioData(bioSocketWorker);
+            }
+            catch (ObjectDisposedException)
+            {
+                System.Diagnostics.Debugger.Log(0, "1", "\n OnSocketConnection: Socket has been closed\n");
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+        }
+        private void WaitForBioData(System.Net.Sockets.Socket soc)
+        {
+            try
+            {
+                if (socketBioWorkerCallback == null)
+                {
+                    socketBioWorkerCallback = new AsyncCallback(OnBioDataReceived);
+                }
+
+                BioSocketPacket sockpkt = new BioSocketPacket();
+                sockpkt.packetSocket = soc;
+                //start listening for data
+                soc.BeginReceive(sockpkt.dataBuffer, 0, sockpkt.dataBuffer.Length, SocketFlags.None, socketBioWorkerCallback, sockpkt);
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private void OnBioDataReceived(IAsyncResult asyn)
+        {
+            try
+            {
+                SocketPacket socketID = (SocketPacket)asyn.AsyncState;
+                //end receive
+                int end = 0;
+                end = socketID.packetSocket.EndReceive(asyn);
+
+                //just getting simple text right now -- needs to be changed
+                char[] chars = new char[end + 1];
+                System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
+                int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
+                System.String tmp = new System.String(chars);
+                MessageBox.Show(tmp);
+                System.String[] name = tmp.Split('|');
+
+                System.String[] data = name[1].Split(' ');
+
+                // Set the UI in the main thread.
+                this.Dispatcher.Invoke((Action)(() =>
+                {
+                    if (data[0] == "HR")
+                        heartRateLabel.Content = data[1];
+                    else if (data[0] == "OX")
+                        oxygenSatLabel.Content = data[1] + " %";
+                })); 
+
+
+
+                WaitForBioData(bioSocketWorker);
+            }
+            catch (ObjectDisposedException)
+            {
+                System.Diagnostics.Debugger.Log(0, "1", "\nOnDataReceived: Socket has been closed\n");
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+        }
 
         private void InitializeSockets()
         {
@@ -173,11 +290,11 @@ namespace LifeCycle
 
         }
 
-
        public class SocketPacket
        {
            public System.Net.Sockets.Socket packetSocket;
            public byte[] dataBuffer;
+
        }
 
         private void WaitForData(System.Net.Sockets.Socket soc)

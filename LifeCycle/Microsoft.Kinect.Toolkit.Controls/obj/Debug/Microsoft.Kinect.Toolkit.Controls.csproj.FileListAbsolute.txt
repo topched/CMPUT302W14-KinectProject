@@ -21,6 +21,7 @@ C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.g.resources
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.dll
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.pdb
+<<<<<<< HEAD
 C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\KinectInteraction180_32.dll
 C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\KinectInteraction180_64.dll
 C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\.Debug\Microsoft.Kinect.Toolkit.Controls.dll
@@ -44,3 +45,5 @@ C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kin
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.g.resources
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.dll
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.pdb
+=======
+>>>>>>> cbe23e9948448582423eda42ac3c3808b58bacc9
