@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Net.Sockets;
+using System.IO;
 
 namespace CliniCycle
 {
@@ -31,6 +32,9 @@ namespace CliniCycle
 
         //for sockets
         Socket socketClient;
+
+        //another socket try
+        System.Net.Sockets.TcpClient test;
 
         public MainWindow()
         {
@@ -146,9 +150,37 @@ namespace CliniCycle
                 //show the patient feed video
                 this.kinectPatientFeed.Source = this.outputImage;
 
+
+                //another attempt
+                NetworkStream stream = test.GetStream();
+                StreamWriter tmp = new StreamWriter(stream);
+                stream.WriteAsync(this.pixels, 0, this.pixels.Length);
+                
+
             };
 
+            //send the image to the patient
+            //socketClient.Send(this.pixels);
+            //SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
+            //arg.SetBuffer(this.pixels, 0, this.pixels.Length);
+            //arg.Completed += arg_Completed;
 
+            //try
+            //{
+            //    socketClient.SendAsync(arg);
+            //}
+           // catch (SocketException se)
+           // {
+           //     MessageBox.Show(se.ToString());
+           // }
+
+            
+
+        }
+
+        void arg_Completed(object sender, SocketAsyncEventArgs e)
+        {
+            MessageBox.Show(e.ToString());
         }
 
         private void CreateSocketConnection()
@@ -156,17 +188,27 @@ namespace CliniCycle
             try
             {
                 //create a new client socket
-                socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                //socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 //local host for now w/ port 8444
                 System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse("127.0.0.1");
-                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 8444);
-                socketClient.Connect(remoteEndPoint);
+                //System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 8444);
+                //socketClient.Connect(remoteEndPoint);
 
                 //test sending a string
-                String tmp = "I am connected";
-                byte[] data = System.Text.Encoding.ASCII.GetBytes(tmp);
-                socketClient.Send(data);
+                //String tmp = "I am connected";
+                //byte[] data = System.Text.Encoding.ASCII.GetBytes(tmp);
+                //socketClient.Send(data);
+
+                test = new TcpClient();
+                test.Connect(remoteIPAddy, 8444);
+
+                if (test.Connected == true)
+                {
+                    MessageBox.Show("connected to patient");
+                }
+
+                
 
             }
             catch (SocketException e)

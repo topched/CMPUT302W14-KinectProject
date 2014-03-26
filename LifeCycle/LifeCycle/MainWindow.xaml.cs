@@ -40,7 +40,9 @@ namespace LifeCycle
         ColorImageFormat imageFormat = ColorImageFormat.RgbResolution640x480Fps30;
 
         private WriteableBitmap outputImage;
+        private WriteableBitmap inputImage;
         private byte[] pixels;
+        //private int pixelcnt;
         
         public string filePathHR = @"..\..\HR.txt";
         public string filePathOX = @"..\..\OX.txt";
@@ -105,7 +107,7 @@ namespace LifeCycle
             this.sensorChooser = new KinectSensorChooser();
             this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
             this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
-            this.sensorChooser.Start();
+            //this.sensorChooser.Start();
 
             // Bind the sensor chooser's current sensor to the KinectRegion
             var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
@@ -175,7 +177,7 @@ namespace LifeCycle
        public class SocketPacket
        {
            public System.Net.Sockets.Socket packetSocket;
-           public byte[] dataBuffer = new byte[1];
+           public byte[] dataBuffer;
        }
 
         private void WaitForData(System.Net.Sockets.Socket soc)
@@ -189,6 +191,10 @@ namespace LifeCycle
 
                 SocketPacket sockpkt = new SocketPacket();
                 sockpkt.packetSocket = soc;
+
+                //need a buffer the size of 1 color frame
+                sockpkt.dataBuffer = new byte[1228800];
+
                 //start listening for data
                 soc.BeginReceive(sockpkt.dataBuffer, 0, sockpkt.dataBuffer.Length, SocketFlags.None, socketWorkerCallback, sockpkt);
             }
@@ -208,12 +214,47 @@ namespace LifeCycle
                 end = socketID.packetSocket.EndReceive(asyn);
 
                 //just getting simple text right now -- needs to be changed
-                char[] chars = new char[end + 1];
-                System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
-                int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
-                System.String tmp = new System.String(chars);
-                MessageBox.Show("Got stuff " + tmp);
+                //char[] chars = new char[end + 1];
+                //System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
+                //int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
+                //System.String tmp = new System.String(chars);
+                //MessageBox.Show("Got stuff " + tmp);
 
+                byte[] tmp = new byte[end + 1];
+                tmp = socketID.dataBuffer;
+
+                this.inputImage = new WriteableBitmap(
+                    640, 480, 96, 96, PixelFormats.Bgr32, null);
+
+                this.inputImage.WritePixels(
+                    new Int32Rect(0, 0, 640, 480), tmp, 640 * 4, 0);
+
+                //this.kinectClinitianFeed.Source = this.inputImage;
+
+                //MessageBox.Show("Hit");
+
+                //we are in another thread need -- takes to main UI
+                int cnt = 0;
+                this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        kinectClinitianFeed.Source = this.inputImage;
+                        MessageBox.Show("hit here");
+
+                        if(cnt%2 == 0)
+                        {
+                            showOptionsButton.Content = "HELLLLLO";
+
+                        }
+                        else
+                        {
+                            showOptionsButton.Content = "BYYYYYYYYE";
+                        }
+
+                        
+
+                    }));
+
+                cnt++;
 
                 WaitForData(socketWorker);
             }
@@ -473,6 +514,9 @@ namespace LifeCycle
             //Close the kinect properly
             this.sensorChooser.Stop();
             this.Close();
+
+            socketListener.Close();
+            socketWorker.Close();
 
            /* MessageBoxResult result = MessageBox.Show("Are you sure you want to return to the login screen?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
