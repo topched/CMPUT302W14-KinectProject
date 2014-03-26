@@ -33,9 +33,6 @@ namespace CliniCycle
         //for sockets
         Socket socketClient;
 
-        //another socket try
-        System.Net.Sockets.TcpClient test;
-
         public MainWindow()
         {
             this.InitializeComponent();
@@ -133,7 +130,9 @@ namespace CliniCycle
                 }
 
                 this.pixels = new byte[frame.PixelDataLength];
+                //MessageBox.Show(frame.PixelDataLength.ToString());
                 frame.CopyPixelDataTo(pixels);
+                //MessageBox.Show(pixels.Length.ToString());
 
                 //string tmp = pixels.Length.ToString();
                 //MessageBox.Show(tmp);
@@ -150,37 +149,32 @@ namespace CliniCycle
                 //show the patient feed video
                 this.kinectPatientFeed.Source = this.outputImage;
 
+                //send the image to the patient
+                //socketClient.Send(this.pixels);
+                SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
+                arg.SetBuffer(this.pixels, 0, this.pixels.Length);
+                arg.Completed += arg_Completed;
 
-                //another attempt
-                NetworkStream stream = test.GetStream();
-                StreamWriter tmp = new StreamWriter(stream);
-                stream.WriteAsync(this.pixels, 0, this.pixels.Length);
+                try
+                {
+                    socketClient.SendAsync(arg);
+                }
+                catch (SocketException se)
+                {
+                    MessageBox.Show("error: " + se.ToString());
+                }
+
+
                 
-
+             
             };
 
-            //send the image to the patient
-            //socketClient.Send(this.pixels);
-            //SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
-            //arg.SetBuffer(this.pixels, 0, this.pixels.Length);
-            //arg.Completed += arg_Completed;
-
-            //try
-            //{
-            //    socketClient.SendAsync(arg);
-            //}
-           // catch (SocketException se)
-           // {
-           //     MessageBox.Show(se.ToString());
-           // }
-
-            
 
         }
 
         void arg_Completed(object sender, SocketAsyncEventArgs e)
         {
-            MessageBox.Show(e.ToString());
+            //MessageBox.Show("message sent");
         }
 
         private void CreateSocketConnection()
@@ -188,28 +182,13 @@ namespace CliniCycle
             try
             {
                 //create a new client socket
-                //socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 //local host for now w/ port 8444
                 System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse("127.0.0.1");
-                //System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 8444);
-                //socketClient.Connect(remoteEndPoint);
-
-                //test sending a string
-                //String tmp = "I am connected";
-                //byte[] data = System.Text.Encoding.ASCII.GetBytes(tmp);
-                //socketClient.Send(data);
-
-                test = new TcpClient();
-                test.Connect(remoteIPAddy, 8444);
-
-                if (test.Connected == true)
-                {
-                    MessageBox.Show("connected to patient");
-                }
-
+                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 8444);
+                socketClient.Connect(remoteEndPoint);
                 
-
             }
             catch (SocketException e)
             {
@@ -225,7 +204,7 @@ namespace CliniCycle
             patientHeartrateBlock.Text = "666";
             patientOxygenSatBlock.Text = "99.99";
             //This will need to be changed to switch the video feed
-            this.kinectPatientFeedLarge.Source = this.outputImage;
+            this.kinectPatientFeedLarge.Source = outputImage;
 
         }
 

@@ -42,7 +42,7 @@ namespace LifeCycle
         private WriteableBitmap outputImage;
         private WriteableBitmap inputImage;
         private byte[] pixels;
-        //private int pixelcnt;
+
         
         public string filePathHR = @"..\..\HR.txt";
         public string filePathOX = @"..\..\OX.txt";
@@ -209,7 +209,7 @@ namespace LifeCycle
         {
             try
             {
-                SocketPacket socketID = (SocketPacket)asyn.AsyncState;
+                BioSocketPacket socketID = (BioSocketPacket)asyn.AsyncState;
                 //end receive
                 int end = 0;
                 end = socketID.packetSocket.EndReceive(asyn);
@@ -233,8 +233,6 @@ namespace LifeCycle
                         oxygenSatLabel.Content = data[1] + " %";
                 })); 
 
-
-
                 WaitForBioData(bioSocketWorker);
             }
             catch (ObjectDisposedException)
@@ -247,6 +245,9 @@ namespace LifeCycle
             }
 
         }
+
+        /// ------- END BIO SOCKETS ------- ///
+        /// ------ START VIDEO SOCKETS ----////
 
         private void InitializeSockets()
         {
@@ -330,48 +331,35 @@ namespace LifeCycle
                 int end = 0;
                 end = socketID.packetSocket.EndReceive(asyn);
 
-                //just getting simple text right now -- needs to be changed
-                //char[] chars = new char[end + 1];
-                //System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
-                //int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
-                //System.String tmp = new System.String(chars);
-                //MessageBox.Show("Got stuff " + tmp);
+                byte[] tmp = new byte[end];
+                //MessageBox.Show("A:" + tmp.Length.ToString() + "---" + end.ToString());
 
-                byte[] tmp = new byte[end + 1];
                 tmp = socketID.dataBuffer;
+
+                //MessageBox.Show("B:" + tmp.Length.ToString() + "---" + end.ToString());
+
+                //placing a break-point right above we can see that tmp holds the data
+
+                //doesnt want to write to the clinitian feed
 
                 this.inputImage = new WriteableBitmap(
                     640, 480, 96, 96, PixelFormats.Bgr32, null);
 
-                this.inputImage.WritePixels(
+               this.inputImage.WritePixels(
                     new Int32Rect(0, 0, 640, 480), tmp, 640 * 4, 0);
 
-                //this.kinectClinitianFeed.Source = this.inputImage;
 
-                //MessageBox.Show("Hit");
+                //errors in the two lines above -- Not to sure why
 
                 //we are in another thread need -- takes to main UI
-                int cnt = 0;
                 this.Dispatcher.Invoke((Action)(() =>
                     {
                         kinectClinitianFeed.Source = this.inputImage;
-                        MessageBox.Show("hit here");
+                        //MessageBox.Show("message");
+                        //showOptionsButton.Content = tmp.Length.ToString();
 
-                        if(cnt%2 == 0)
-                        {
-                            showOptionsButton.Content = "HELLLLLO";
-
-                        }
-                        else
-                        {
-                            showOptionsButton.Content = "BYYYYYYYYE";
-                        }
-
-                        
 
                     }));
-
-                cnt++;
 
                 WaitForData(socketWorker);
             }
