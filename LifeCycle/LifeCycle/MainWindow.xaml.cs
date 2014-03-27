@@ -43,7 +43,8 @@ namespace LifeCycle
         private WriteableBitmap inputImage;
         private byte[] pixels;
 
-        
+        public Socket socketToClinician;
+
         public string filePathHR = @"..\..\HR.txt";
         public string filePathOX = @"..\..\OX.txt";
         public string heartLine;
@@ -58,7 +59,8 @@ namespace LifeCycle
 
         public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public bool workoutInProgress = false;
-        public Process process = new Process();
+        public Process serverProcess = new Process();
+        public Process echoProcess = new Process();
 
         //for the websockets
         private List<IWebSocketConnection> sockets;
@@ -75,24 +77,32 @@ namespace LifeCycle
         public MainWindow()
         {
             InitializeComponent();
-
             //Used to start a websocket server
             //InitializeWebSockets();
 
+            CreateSocketConnection();
             //used to start socket server
             InitializeSockets();
             InitializeBioSockets();
             
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.FileName = "java";
+            serverProcess.StartInfo.UseShellExecute = false;
+            serverProcess.StartInfo.RedirectStandardOutput = false;
+            serverProcess.StartInfo.RedirectStandardError = false;
+            serverProcess.StartInfo.CreateNoWindow = true;
+            serverProcess.StartInfo.FileName = "java";
 
+            echoProcess.StartInfo.UseShellExecute = false;
+            echoProcess.StartInfo.RedirectStandardOutput = false;
+            echoProcess.StartInfo.RedirectStandardError = false;
+            echoProcess.StartInfo.CreateNoWindow = true;
+            echoProcess.StartInfo.FileName = "java";
             //Cant hardcode a file path like this 
-            //process.StartInfo.Arguments = @"-cp C:\Users\Valerie\Documents\GitHub\CMPUT302W14-KinectProject\EchoClient\src\ ChatClient Brian 142.244.208.133";
-            //process.Start(); 
-            //process.BeginOutputReadLine();
+
+            serverProcess.StartInfo.Arguments = @"~\ChatServer";
+           // echoProcess.StartInfo.Arguments = @"~\EchoClient Brian 142.244.208.133";
+            serverProcess.Start();
+          //  echoProcess.Start(); 
+            
 
             // Set up Streams from which to read heartrate and saturation data.
             if (File.Exists(filePathHR))
@@ -219,21 +229,25 @@ namespace LifeCycle
                 System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
-                MessageBox.Show(tmp);
                 System.String[] name = tmp.Split('|');
-
-                System.String[] data = name[1].Split(' ');
-
-                // Set the UI in the main thread.
-                this.Dispatcher.Invoke((Action)(() =>
+                if (name.Length == 2)
                 {
-                    if (data[0] == "HR")
-                        heartRateLabel.Content = data[1];
-                    else if (data[0] == "OX")
-                        oxygenSatLabel.Content = data[1] + " %";
-                })); 
+                    System.String[] data = name[1].Split(' ');
 
-                WaitForBioData(bioSocketWorker);
+                    byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
+
+                    socketToClinician.Send(dataToClinician);
+                    // Set the UI in the main thread.
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        if (data[0] == "HR")
+                            heartRateLabel.Content = data[1];
+                        else if (data[0] == "OX")
+                            oxygenSatLabel.Content = data[1] + " %";
+                    }));
+                }
+                    WaitForBioData(bioSocketWorker);
+                
             }
             catch (ObjectDisposedException)
             {
@@ -518,7 +532,7 @@ namespace LifeCycle
         
         public void updateDisplays()
         {
-            /*/ Display the heartrate.
+            /*// Display the heartrate.
             heartRateFile = process.StandardOutput;
             if ((heartLine = heartRateFile.ReadLine()) != null)
             {
@@ -537,8 +551,8 @@ namespace LifeCycle
                     oxygenSatLabel.Content = o2Words[1] + " %";
             } 
             else
-                heartRateLabel.Content = "-- %"; */
-
+                heartRateLabel.Content = "-- %"; 
+            */
             // Display the remaining time.
             minutesLeft = (secondsLeft) / 60;
             timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
@@ -603,6 +617,25 @@ namespace LifeCycle
             optionsTimeLabel.Visibility = Visibility.Hidden;
             selectTimeScrollViewer.Visibility = Visibility.Hidden;
 
+        }
+
+        private void CreateSocketConnection()
+        {
+            try
+            {
+                //create a new client socket
+                socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                //local host for now w/ port 8444
+                System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse("127.0.0.1");
+                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 4443);
+                socketToClinician.Connect(remoteEndPoint);
+
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         /// <summary>

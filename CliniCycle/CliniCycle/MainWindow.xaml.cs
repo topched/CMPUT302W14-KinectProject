@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Net.Sockets;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace CliniCycle
 {
@@ -23,6 +24,7 @@ namespace CliniCycle
     /// </summary>
     public partial class MainWindow : Window
     {
+        int patientNum = 0;
 
         private KinectSensorChooser sensorChooser;
         ColorImageFormat imageFormat = ColorImageFormat.RgbResolution640x480Fps30;
@@ -51,8 +53,6 @@ namespace CliniCycle
             // Insert code required on object creation below this point.
 
             CreateSocketConnection();
-
-
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
@@ -159,6 +159,13 @@ namespace CliniCycle
                 //show the patient feed video
                 this.kinectPatientFeed.Source = this.outputImage;
 
+                // Displays the top left video in the large screen when the top left video is clicked, not tested yet since no Kinect!
+                if (patientNum == 1)
+                {
+                    this.kinectPatientFeedLarge.Source = this.outputImage;
+                }
+                
+
                 //send the image to the patient
                 //socketClient.Send(this.pixels);
                 SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
@@ -223,7 +230,7 @@ namespace CliniCycle
                 //create listening socket
                 socketBioListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
-                IPEndPoint iplocal = new IPEndPoint(addy, 4444);
+                IPEndPoint iplocal = new IPEndPoint(addy, 4443);
                 //bind to local IP Address
                 socketBioListener.Bind(iplocal);
                 //start listening -- 4 is max connections queue, can be changed
@@ -233,7 +240,7 @@ namespace CliniCycle
             }
             catch (SocketException e)
             {
-                //something went wrong
+                //something went wrongpatient
                 MessageBox.Show(e.Message);
             }
 
@@ -290,47 +297,84 @@ namespace CliniCycle
                 System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
+                tmp = Regex.Replace(tmp, @"\t|\n|\r", " ");
+                // MessageBox.Show(tmp);
                 System.String[] name = tmp.Split('|');
-                
                 System.String[] data = name[1].Split(' ');
-                p1 = "Atlantic";
-                p2 = "Shield";
-                p3 = "Arctic";
-                p4 = "Plains";
-                p5 = "Cordillera";
-                p6 = "Great Lakes";
+                p1 = "patient1";
+                p2 = "patient2";
+                p3 = "patient3";
+                p4 = "patient4";
+                p5 = "patient5";
+                p6 = "patient6";
                 // Set the UI in the main thread.
                 this.Dispatcher.Invoke((Action)(() =>
-                {
+                {   
                     if (data[0] == "HR") {
-                        data[1] = data[1].Remove(2);
+  
+
                         if (name[0] == p1)
+                        {
                             heartRate1.Content = "Heart Rate: " + data[1] + " bpm";
+                            if (patientNum == 1) patientHeartrateBlock.Text = data[1] + " bpm";
+                        }
                         if (name[0] == p2)
+                        {
                             heartRate2.Content = "Heart Rate: " + data[1] + " bpm";
+                            if (patientNum == 2) patientHeartrateBlock.Text = data[1] + " bpm";
+                        }
                         if (name[0] == p3)
+                        {
                             heartRate3.Content = "Heart Rate: " + data[1] + " bpm";
+                            if (patientNum == 3) patientHeartrateBlock.Text = data[1] + " bpm";
+                        }
                         if (name[0] == p4)
+                        {
                             heartRate4.Content = "Heart Rate: " + data[1] + " bpm";
+                            if (patientNum == 4) patientHeartrateBlock.Text = data[1] + " bpm";
+                        }
                         if (name[0] == p5)
+                        {
                             heartRate5.Content = "Heart Rate: " + data[1] + " bpm";
+                            if (patientNum == 5) patientHeartrateBlock.Text = data[1] + " bpm";
+                        }
                         if (name[0] == p6)
+                        {
                             heartRate6.Content = "Heart Rate: " + data[1] + " bpm";
+                            if (patientNum == 6) patientHeartrateBlock.Text = data[1] + " bpm";
+                        }
+
                     }
+
                     else if (data[0] == "OX")
                     {
                         if (name[0] == p1)
+                        {
                             sat1.Content = "Oxygen Sat: " + data[1] + "%";
+                            if (patientNum == 1) patientOxygenSatBlock.Text = data[1] + "%";
+                        }
                         if (name[0] == p2)
+                        {
                             sat2.Content = "Oxygen Sat: " + data[1] + "%";
+                            if (patientNum == 2) patientOxygenSatBlock.Text = data[1] + "%";
+                        }
                         if (name[0] == p3)
+                        {
                             sat3.Content = "Oxygen Sat: " + data[1] + "%";
-                        if (name[0] == p4)
+                            if (patientNum == 3) patientOxygenSatBlock.Text = data[1] + "%";
+                        }
+                        if (name[0] == p4) { 
                             sat4.Content = "Oxygen Sat: " + data[1] + "%";
-                        if (name[0] == p5)
+                            if (patientNum == 4) patientOxygenSatBlock.Text = data[1] + "%";
+                        }
+                        if (name[0] == p5){
                             sat5.Content = "Oxygen Sat: " + data[1] + "%";
-                        if (name[0] == p6)
+                            if (patientNum == 5) patientOxygenSatBlock.Text = data[1] + "%";
+                        }
+                        if (name[0] == p6){
                             sat6.Content = "Oxygen Sat: " + data[1] + "%";
+                            if (patientNum == 6) patientOxygenSatBlock.Text = data[1] + "%";
+                        }
                     }
                 }));
 
@@ -349,9 +393,10 @@ namespace CliniCycle
 
         private void patient1_Click(object sender, RoutedEventArgs e)
         {
-            patientIDBlock.Text = "Satan";
-            patientHeartrateBlock.Text = "666";
-            patientOxygenSatBlock.Text = "99.99";
+            patientIDBlock.Text = p1;
+            patientNum = 1;
+            patientHeartrateBlock.Text = heartRate1.Content.ToString();
+            patientOxygenSatBlock.Text = sat1.Content.ToString();
             //This will need to be changed to switch the video feed
             this.kinectPatientFeedLarge.Source = outputImage;
 
@@ -359,24 +404,47 @@ namespace CliniCycle
 
         private void patient2_Click(object sender, RoutedEventArgs e)
         {
-            patientIDBlock.Text = "als;jdf";
-            patientHeartrateBlock.Text = "3656";
-            patientOxygenSatBlock.Text = "80";
+            patientNum = 2;
+            patientIDBlock.Text = p2;
+            patientHeartrateBlock.Text = heartRate2.Content.ToString();
+            patientOxygenSatBlock.Text = sat2.Content.ToString();
         }
 
         private void patient3_Click(object sender, RoutedEventArgs e)
         {
-            patientIDBlock.Text = "khk";
-            patientHeartrateBlock.Text = "444";
-            patientOxygenSatBlock.Text = "6546";
+            patientNum = 3;
+            patientIDBlock.Text = p3;
+            patientHeartrateBlock.Text = heartRate3.Content.ToString(); 
+            patientOxygenSatBlock.Text = sat3.Content.ToString();
         }
 
         private void patient4_Click(object sender, RoutedEventArgs e)
         {
-            patientIDBlock.Text = "Kyle";
-            patientHeartrateBlock.Text = "57";
-            patientOxygenSatBlock.Text = "98";
+            patientNum = 4;
+            patientIDBlock.Text = p4;
+            patientHeartrateBlock.Text = heartRate4.Content.ToString();
+            patientOxygenSatBlock.Text = sat4.Content.ToString();
+
         }
+
+        private void patient5_Click(object sender, RoutedEventArgs e)
+        {
+            patientNum = 5;
+            patientIDBlock.Text = p5;
+            patientHeartrateBlock.Text = heartRate5.Content.ToString();
+            patientOxygenSatBlock.Text = sat5.Content.ToString();
+        }
+        private void patient6_Click(object sender, RoutedEventArgs e)
+        {
+            patientNum = 6;
+            patientIDBlock.Text = p6;
+            patientHeartrateBlock.Text = heartRate6.Content.ToString();
+            patientOxygenSatBlock.Text = sat6.Content.ToString();
+        }
+
+
+
+
 
 
 
