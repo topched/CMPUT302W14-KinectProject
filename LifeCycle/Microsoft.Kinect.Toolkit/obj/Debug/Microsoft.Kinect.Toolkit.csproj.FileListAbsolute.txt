@@ -23,4 +23,3 @@ C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft.Kinect.Toolkit\obj\Debug\Microsoft.Kinect.Toolkit.csproj.GenerateResource.Cache
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft.Kinect.Toolkit\obj\Debug\Microsoft.Kinect.Toolkit.dll
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft.Kinect.Toolkit\obj\Debug\Microsoft.Kinect.Toolkit.pdb
-

@@ -21,4 +21,3 @@ C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.g.resources
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.dll
 C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycleDemo\Microsoft.Kinect.Toolkit.Controls\obj\Debug\Microsoft.Kinect.Toolkit.Controls.pdb
-

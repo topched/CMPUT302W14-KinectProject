@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using System.Drawing.Imaging;
+//using System.Drawing.Imaging;
+
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -41,7 +42,7 @@ namespace LifeCycle
 
         private WriteableBitmap outputImage;
         private WriteableBitmap inputImage;
-        private byte[] pixels;
+        private byte[] pixels = new byte[0];
 
         
         public string filePathHR = @"..\..\HR.txt";
@@ -63,11 +64,15 @@ namespace LifeCycle
         //for the websockets
         private List<IWebSocketConnection> sockets;
 
-        //for regular sockets
+        //for getting the video feed
         private AsyncCallback socketWorkerCallback;
         public Socket socketListener;
         public Socket socketWorker;
 
+        //for sending the video feed
+        public Socket socketClient;
+
+        //Used to communicate with the medical devices
         private AsyncCallback socketBioWorkerCallback;
         public Socket socketBioListener;
         public Socket bioSocketWorker;
@@ -79,7 +84,10 @@ namespace LifeCycle
             //Used to start a websocket server
             //InitializeWebSockets();
 
-            //used to start socket server
+            //used to stream video
+            CreateSocketConnection();
+
+            //used to get video stream and medical device stats
             InitializeSockets();
             InitializeBioSockets();
             
@@ -100,7 +108,7 @@ namespace LifeCycle
             if (File.Exists(filePathOX))
                 oxygenSatFile = new StreamReader(filePathOX);
             
-            //updateDisplays();
+           //create initial timer settings
             minutesLeft = (secondsLeft) / 60;
             timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
             
@@ -136,7 +144,7 @@ namespace LifeCycle
 
         }
         /// <summary>
-        /// Sets the connection for biometrics.
+        /// Methods for creating connection to medical device relay server and reading from the connection
         /// </summary>
         /// 
         public class BioSocketPacket
@@ -172,7 +180,6 @@ namespace LifeCycle
             try
             {
                 bioSocketWorker = socketBioListener.EndAccept(asyn);
-
                 WaitForBioData(bioSocketWorker);
             }
             catch (ObjectDisposedException)
@@ -214,7 +221,7 @@ namespace LifeCycle
                 int end = 0;
                 end = socketID.packetSocket.EndReceive(asyn);
 
-                //just getting simple text right now -- needs to be changed
+                //getting the text from the medical devices
                 char[] chars = new char[end + 1];
                 System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
@@ -248,6 +255,17 @@ namespace LifeCycle
 
         /// ------- END BIO SOCKETS ------- ///
         /// ------ START VIDEO SOCKETS ----////
+        
+
+        ///<summary>
+        ///Methods for creating a connection and getting the video feed 
+        ///</summary>
+        public class SocketPacket
+        {
+            public System.Net.Sockets.Socket packetSocket;
+            public byte[] dataBuffer;
+
+        }
 
         private void InitializeSockets()
         {
@@ -277,7 +295,6 @@ namespace LifeCycle
             try
             {
                 socketWorker = socketListener.EndAccept(asyn);
-
                 WaitForData(socketWorker);
             }
             catch (ObjectDisposedException)
@@ -290,13 +307,6 @@ namespace LifeCycle
             }
 
         }
-
-       public class SocketPacket
-       {
-           public System.Net.Sockets.Socket packetSocket;
-           public byte[] dataBuffer;
-
-       }
 
         private void WaitForData(System.Net.Sockets.Socket soc)
         {
@@ -331,35 +341,32 @@ namespace LifeCycle
                 int end = 0;
                 end = socketID.packetSocket.EndReceive(asyn);
 
+                //We shouldnt need to do this anymore its already in the buffer
                 byte[] tmp = new byte[end];
-                //MessageBox.Show("A:" + tmp.Length.ToString() + "---" + end.ToString());
-
                 tmp = socketID.dataBuffer;
 
-                //MessageBox.Show("B:" + tmp.Length.ToString() + "---" + end.ToString());
 
-                //placing a break-point right above we can see that tmp holds the data
-
-                //doesnt want to write to the clinitian feed
-
-                this.inputImage = new WriteableBitmap(
+                    inputImage = new WriteableBitmap(
                     640, 480, 96, 96, PixelFormats.Bgr32, null);
 
-               this.inputImage.WritePixels(
+
+
+                    inputImage.WritePixels(
                     new Int32Rect(0, 0, 640, 480), tmp, 640 * 4, 0);
+               
+                    
 
+               
 
-                //errors in the two lines above -- Not to sure why
+                //freeze so the the main thread can access the image
+               inputImage.Freeze();
 
                 //we are in another thread need -- takes to main UI
-                this.Dispatcher.Invoke((Action)(() =>
+                Dispatcher.Invoke((Action)(() =>
                     {
-                        kinectClinitianFeed.Source = this.inputImage;
-                        //MessageBox.Show("message");
-                        //showOptionsButton.Content = tmp.Length.ToString();
-
-
+                        kinectClinitianFeed.Source = inputImage;
                     }));
+                
 
                 WaitForData(socketWorker);
             }
@@ -374,7 +381,30 @@ namespace LifeCycle
 
         }
 
-        //Computers running on the same network should be able to get at this. -- not used for anything
+        /// <summary>
+        /// This method is used to open a socket which sends the video feed
+        /// </summary>
+        private void CreateSocketConnection()
+        {
+            try
+            {
+                //create a new client socket
+                socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                //local host for now w/ port 8444
+                System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse("127.0.0.1");
+                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 8445);
+                socketClient.Connect(remoteEndPoint);
+
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        //Computers running on the same network will be able to get at this. 
+        //      NOT CURRENTLY USED
         private void InitializeWebSockets()
         {
             sockets = new List<IWebSocketConnection>();
@@ -398,7 +428,6 @@ namespace LifeCycle
                 };
             });
         }
-
 
         /// <summary>
         /// Called when the KinectSensorChooser gets a new sensor
@@ -472,27 +501,43 @@ namespace LifeCycle
                     return;
                 }
 
-                this.pixels = new byte[frame.PixelDataLength];
+                if (pixels.Length == 0)
+                {
+                    pixels = new byte[frame.PixelDataLength];
+                    outputImage = new WriteableBitmap(
+                        frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
+
+                    kinectPatientFeed.Source = outputImage;
+                }
+                
                 frame.CopyPixelDataTo(pixels);
 
-                //string tmp = pixels.Length.ToString();
-                //MessageBox.Show(tmp);
+                outputImage.WritePixels(
+                    new Int32Rect(0, 0, frame.Width, frame.Height), pixels, frame.Width * 4, 0);
 
-                //pixels appears to be 1228800 bytes long
+                //send the frame to the clinitian
+                SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
+                arg.SetBuffer(pixels, 0, pixels.Length);
+                arg.Completed += arg_Completed;
 
-                //get the bitmap of the color frame
-                this.outputImage = new WriteableBitmap(
-                    frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
-
-                this.outputImage.WritePixels(
-                    new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
-
-                //show the patient feed video
-                this.kinectPatientFeed.Source = this.outputImage;
+                try
+                {
+                    socketClient.SendAsync(arg);
+                }
+                catch (SocketException se)
+                {
+                    MessageBox.Show("error: " + se.ToString());
+                }
+ 
 
             };
 
            
+        }
+
+        void arg_Completed(object sender, SocketAsyncEventArgs e)
+        {
+            //Called when the message is sent. Used for debugging
         }
 
         /// <summary>
@@ -605,6 +650,16 @@ namespace LifeCycle
 
         }
 
+        void timeSelectionButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            string[] stuff = sender.ToString().Split(' ');
+            minutesLeft = Int32.Parse(stuff[1]);
+            secondsLeft = (minutesLeft) * 60;
+            timerLabel.Content = minutesLeft + "m " + 0 + "s";
+
+        }
+
         /// <summary>
         /// User presses the exit button to quit the workout - close streams and this window.
         /// </summary>
@@ -620,32 +675,23 @@ namespace LifeCycle
             this.sensorChooser.Stop();
             this.Close();
 
-            socketListener.Close();
-            socketWorker.Close();
-
-           /* MessageBoxResult result = MessageBox.Show("Are you sure you want to return to the login screen?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.Yes)
+            //close the sockets properly
+            if (socketWorker != null)
             {
-                
+                socketWorker.Close();
+            }
 
-                // Close this window and open the loginWindow.
-                var newWindow = new LoginWindow();
-                newWindow.Show();
-                this.Close();
-            } */
-        }
+            if (socketListener != null){
 
-        void timeSelectionButton_Click(object sender, RoutedEventArgs e)
-        {
+                socketListener.Close();
+            }
 
-            string[] stuff = sender.ToString().Split(' ');
-            minutesLeft = Int32.Parse(stuff[1]);
-            secondsLeft = (minutesLeft) * 60;
-            timerLabel.Content = minutesLeft + "m " + 0 + "s";
+            if (socketClient.Connected)
+            {
+                socketClient.Close();
+            }
             
         }
-
-        
 
     }
 }

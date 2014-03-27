@@ -6,7 +6,7 @@
         Title="MainWindow" Height="768" Width="1024" Background="#FFF7F1F1" ResizeMode="CanMinimize">
 
 
-    <Grid Margin="0,10,2,0">
+    <Grid Margin="0,10,0,0">
         <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi" />
         <k:KinectRegion x:Name="kinectRegion" Margin="0,-9,0,39" Background="#FF746E6E">
 
