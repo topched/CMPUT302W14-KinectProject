@@ -3,10 +3,9 @@ from django.db import models
 from django.utils import timezone
 
 class Patient(models.Model):
-	F_name = models.CharField(max_length = 30)
-	L_name = models.CharField(max_length = 30)
+	Name = models.CharField(max_length = 45)
 	def __str__(self):
-		return self.L_name + ", " + self.F_name
+		return self.Name
 	
 		
 class Patientstat(models.Model):
