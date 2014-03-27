@@ -65,6 +65,7 @@
                 <Label  x:Name="sat5" HorizontalAlignment="Left" Height="32" Margin="426,162,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="160" FontSize="14.667" Grid.Column="1" Content="Oxygen Sat:  --"/>
                 <Label  x:Name="heartRate6" HorizontalAlignment="Left" Height="27" Margin="591,135,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="166" FontSize="14.667" Grid.Column="1" Content="Heart Rate: --"/>
                 <Label  x:Name="sat6" HorizontalAlignment="Left" Height="32" Margin="591,162,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="166" FontSize="14.667" Grid.Column="1" Content="Oxygen Sat:  --"/>
+                <k:KinectTileButton Content="Exit" HorizontalAlignment="Left" LabelBackground="Brown" Margin="10,534,0,0" Width="163" x:Name="exitProgramButton" Click="exitProgramButton_Click" Height="87" Background="#FF01A2E8" Foreground="White" Grid.Row="1" FontSize="48" FontFamily="Microsoft Uighur" VerticalAlignment="Top" Grid.Column="1" />
 
 
             </Grid>

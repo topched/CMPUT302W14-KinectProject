@@ -487,6 +487,18 @@ namespace CliniCycle
             patientOxygenSatBlock.Text = sat6.Content.ToString();
         }
 
+        private void exitProgramButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Close the kinect properly
+            this.sensorChooser.Stop();
+            this.Close();
+
+            if (socketBioListener != null)
+                socketBioListener.Close();
+            if (bioSocketWorker != null)
+                bioSocketWorker.Close();
+        }
+
 
 
 
