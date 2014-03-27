@@ -52,7 +52,7 @@ namespace LifeCycle
         public StreamReader heartRateFile = null;
         public StreamReader oxygenSatFile = null;
         
-        public int secondsLeft = 1800;
+        public int secondsLeft = 2;
         public int minutesLeft = 30;
         public int heartRate = 135;
         public int OX = 1;
@@ -60,7 +60,6 @@ namespace LifeCycle
         public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public bool workoutInProgress = false;
         public Process serverProcess = new Process();
-        public Process echoProcess = new Process();
 
         //for the websockets
         private List<IWebSocketConnection> sockets;
@@ -91,24 +90,12 @@ namespace LifeCycle
             serverProcess.StartInfo.CreateNoWindow = true;
             serverProcess.StartInfo.FileName = "java";
 
-            echoProcess.StartInfo.UseShellExecute = false;
-            echoProcess.StartInfo.RedirectStandardOutput = false;
-            echoProcess.StartInfo.RedirectStandardError = false;
-            echoProcess.StartInfo.CreateNoWindow = true;
-            echoProcess.StartInfo.FileName = "java";
-            //Cant hardcode a file path like this 
-
             serverProcess.StartInfo.Arguments = @"~\ChatServer";
-           // echoProcess.StartInfo.Arguments = @"~\EchoClient Brian 142.244.208.133";
             serverProcess.Start();
-          //  echoProcess.Start(); 
+
             
 
-            // Set up Streams from which to read heartrate and saturation data.
-            if (File.Exists(filePathHR))
-                heartRateFile = new StreamReader(filePathHR);
-            if (File.Exists(filePathOX))
-                oxygenSatFile = new StreamReader(filePathOX);
+
             
             //updateDisplays();
             minutesLeft = (secondsLeft) / 60;
@@ -241,7 +228,25 @@ namespace LifeCycle
                     this.Dispatcher.Invoke((Action)(() =>
                     {
                         if (data[0] == "HR")
+                        {
                             heartRateLabel.Content = data[1];
+                            if (Int32.Parse(data[1]) < 60)
+                            {
+                                encouragementBox.Foreground = new SolidColorBrush(Colors.Orange);
+                                encouragementBox.Content = "Speed up!";
+                            }
+                            else if (Int32.Parse(data[1]) > 165)
+                            {
+                                encouragementBox.Foreground = new SolidColorBrush(Colors.Cyan);
+                                encouragementBox.Content = "Slow down!";
+                            }
+                            else
+                            {
+                                encouragementBox.Foreground = new SolidColorBrush(Colors.MediumVioletRed);
+                                encouragementBox.Content = "Keep it up!";
+                            }
+                        }
+
                         else if (data[0] == "OX")
                             oxygenSatLabel.Content = data[1] + " %";
                     }));
@@ -524,36 +529,28 @@ namespace LifeCycle
             else
             {
                 dispatcherTimer.Stop();
+
+                // disable the workout button
                 beginWorkoutButton.IsEnabled = false;
-                MessageBoxResult result = MessageBox.Show("Workout completed - Great job!", "Success!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                beginWorkoutButton.Content = "Begin Workout";
+
+                // hide encouragement box
+                encouragementBox.Visibility = Visibility.Hidden;
+
+                //show optionsButton
+                showOptionsButton.Visibility = Visibility.Visible;
+
+                // Congratulate the user.
+                //encouragementBox.Content = "Great Job!";
+                //encouragementBox.Foreground = new SolidColorBrush(Colors.Gold);
+                //MessageBoxResult result = MessageBox.Show("Workout completed - Great job!", "Success!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                workoutInProgress = false;
             }
         }
 
         
         public void updateDisplays()
         {
-            /*// Display the heartrate.
-            heartRateFile = process.StandardOutput;
-            if ((heartLine = heartRateFile.ReadLine()) != null)
-            {
-                string[] hRWords = heartLine.Split(' ');
-                if (hRWords[0] == "HR")
-                    heartRateLabel.Content = hRWords[1] + " BPM";
-            }
-            else
-                heartRateLabel.Content = "-- BPM";
-
-           //  Display the oxygen sat.
-            if ((oxygenLine = oxygenSatFile.ReadLine()) != null)
-            {
-                string[] o2Words = oxygenLine.Split(' ');
-                if (o2Words[0] == "OX")
-                    oxygenSatLabel.Content = o2Words[1] + " %";
-            } 
-            else
-                heartRateLabel.Content = "-- %"; 
-            */
-            // Display the remaining time.
             minutesLeft = (secondsLeft) / 60;
             timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
         }
@@ -572,6 +569,9 @@ namespace LifeCycle
                 //hide the options button during the workout
                 showOptionsButton.Visibility = Visibility.Hidden;
 
+                // show the encouragementBox.
+                encouragementBox.Visibility = Visibility.Visible;
+
                 //show the timer label
                 //timerLabel.Visibility = Visibility.Visible;
 
@@ -586,6 +586,9 @@ namespace LifeCycle
                 //re-show the options button
                 showOptionsButton.Visibility = Visibility.Visible;
 
+                // hide the encouragementBox.
+                encouragementBox.Visibility = Visibility.Hidden;
+
                 //hide the timer label
                // timerLabel.Visibility = Visibility.Hidden;
             }
@@ -598,6 +601,7 @@ namespace LifeCycle
             beginWorkoutButton.Visibility = Visibility.Hidden;
             exitProgramButton.Visibility = Visibility.Hidden;
             closeOptionsButton.Visibility = Visibility.Visible;
+            encouragementBox.Visibility = Visibility.Hidden;
 
             //show the time label and scroll viewer
             optionsTimeLabel.Visibility = Visibility.Visible;
@@ -616,6 +620,9 @@ namespace LifeCycle
             //hide the time label and scroll viewer
             optionsTimeLabel.Visibility = Visibility.Hidden;
             selectTimeScrollViewer.Visibility = Visibility.Hidden;
+
+            // re-enable the workout button
+            beginWorkoutButton.IsEnabled = true;
 
         }
 
@@ -645,16 +652,14 @@ namespace LifeCycle
         /// <param name="e"></param>
         private void exitProgramButton_Click(object sender, RoutedEventArgs e)
         {
-            // Close the streamReaders.
-            heartRateFile.Close();
-            oxygenSatFile.Close();
-
-            //Close the kinect properly
+           //Close the kinect properly
             this.sensorChooser.Stop();
             this.Close();
 
-            socketListener.Close();
-            socketWorker.Close();
+            if (socketListener != null)
+                socketListener.Close();
+            if (socketWorker != null)
+                socketWorker.Close();
 
            /* MessageBoxResult result = MessageBox.Show("Are you sure you want to return to the login screen?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
