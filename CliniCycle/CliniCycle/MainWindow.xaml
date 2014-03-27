@@ -70,6 +70,7 @@
 
             </Grid>
         </k:KinectRegion>
+        <Image Margin="200,-14,736,639" Source="heart_beat.png" Stretch="Fill"/>
     </Grid>
 
 </Window>

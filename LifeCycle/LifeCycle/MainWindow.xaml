@@ -52,6 +52,7 @@
                     <Label x:Name="heartRateLabel_Copy" Content="heartrate (BPM):" HorizontalAlignment="Left" Margin="10,56.419,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="62" Width="194"/>
                     <Label x:Name="heartRateLabel_Copy1" Content="Sats:" HorizontalAlignment="Left" Margin="343,56.419,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="62" Width="60"/>
                     <Label x:Name="encouragementBox" Content="" HorizontalAlignment="Left" Margin="79,0,0,0" Grid.Row="1" VerticalAlignment="Top" Height="110" Width="400" FontSize="72" FontFamily="Microsoft Uighur"/>
+                    <Image Margin="310,0,186,31" Source="heart_beat.png" Stretch="Fill"/>
 
                 </Grid>
 
