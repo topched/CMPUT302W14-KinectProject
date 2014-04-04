@@ -41,9 +41,10 @@ namespace LifeCycle
 
         private WriteableBitmap outputImage;
         private WriteableBitmap inputImage;
-        private byte[] pixels;
+        private byte[] pixels = new byte[0];
 
         public Socket socketToClinician;
+        public Socket socketClient;
 
         public string filePathHR = @"..\..\HR.txt";
         public string filePathOX = @"..\..\OX.txt";
@@ -91,7 +92,7 @@ namespace LifeCycle
             serverProcess.StartInfo.FileName = "java";
 
             serverProcess.StartInfo.Arguments = @"~\ChatServer";
-            serverProcess.Start();
+            //serverProcess.Start();
 
             
 
@@ -109,7 +110,7 @@ namespace LifeCycle
             this.sensorChooser = new KinectSensorChooser();
             this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
             this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
-            //this.sensorChooser.Start();
+            this.sensorChooser.Start();
 
             // Bind the sensor chooser's current sensor to the KinectRegion
             var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
@@ -361,19 +362,19 @@ namespace LifeCycle
 
                 //doesnt want to write to the clinitian feed
 
-                this.inputImage = new WriteableBitmap(
+                inputImage = new WriteableBitmap(
                     640, 480, 96, 96, PixelFormats.Bgr32, null);
 
-               this.inputImage.WritePixels(
+               inputImage.WritePixels(
                     new Int32Rect(0, 0, 640, 480), tmp, 640 * 4, 0);
 
+               inputImage.Freeze();
 
-                //errors in the two lines above -- Not to sure why
 
                 //we are in another thread need -- takes to main UI
                 this.Dispatcher.Invoke((Action)(() =>
                     {
-                        kinectClinitianFeed.Source = this.inputImage;
+                        kinectClinitianFeed.Source = inputImage;
                         //MessageBox.Show("message");
                         //showOptionsButton.Content = tmp.Length.ToString();
 
@@ -491,27 +492,50 @@ namespace LifeCycle
                     return;
                 }
 
-                this.pixels = new byte[frame.PixelDataLength];
-                frame.CopyPixelDataTo(pixels);
+                if (pixels.Length == 0)
+                {
+                    this.pixels = new byte[frame.PixelDataLength];
+                }
+                frame.CopyPixelDataTo(this.pixels);
 
-                //string tmp = pixels.Length.ToString();
-                //MessageBox.Show(tmp);
+                SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
+                arg.SetBuffer(this.pixels, 0, this.pixels.Length);
+                arg.Completed += arg_Completed;
 
-                //pixels appears to be 1228800 bytes long
+                //MessageBox.Show(pixels.Length.ToString());
 
-                //get the bitmap of the color frame
-                this.outputImage = new WriteableBitmap(
+                if (this.pixels.Length == 1228800)
+                {
+                    try
+                    {
+                        //socketClient.SendAsync(arg);
+                        socketClient.Send(pixels);
+                    }
+                    catch (SocketException se)
+                    {
+                        MessageBox.Show("Error: " + se.ToString());
+                    }
+                }
+
+
+                outputImage = new WriteableBitmap(
                     frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
 
-                this.outputImage.WritePixels(
+
+                //pixels appears to be 1228800 bytes long
+                outputImage.WritePixels(
                     new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
 
-                //show the patient feed video
-                this.kinectPatientFeed.Source = this.outputImage;
+                kinectPatientFeed.Source = outputImage;
 
             };
 
            
+        }
+
+        void arg_Completed(object sender, SocketAsyncEventArgs e)
+        {
+            //
         }
 
         /// <summary>
@@ -632,11 +656,16 @@ namespace LifeCycle
             {
                 //create a new client socket
                 socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 //local host for now w/ port 8444
                 System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse("127.0.0.1");
                 System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 4443);
                 socketToClinician.Connect(remoteEndPoint);
+
+                System.Net.IPEndPoint endPoint = new System.Net.IPEndPoint(remoteIPAddy, 8445);
+                socketClient.Connect(endPoint);
+
 
             }
             catch (SocketException e)
@@ -683,7 +712,6 @@ namespace LifeCycle
             
         }
 
-        
-
+       
     }
 }

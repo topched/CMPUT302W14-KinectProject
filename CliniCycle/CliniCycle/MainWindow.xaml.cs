@@ -30,15 +30,20 @@ namespace CliniCycle
         ColorImageFormat imageFormat = ColorImageFormat.RgbResolution640x480Fps30;
 
         private WriteableBitmap outputImage;
+        private WriteableBitmap inputImage;
         private WriteableBitmap bigOutputImage;
-        private byte[] pixels;
+        private byte[] pixels = new byte[0];
 
         //for sockets
-        Socket socketClient;
+        public Socket socketClient;
 
         private AsyncCallback socketBioWorkerCallback;
         public Socket socketBioListener;
         public Socket bioSocketWorker;
+
+        private AsyncCallback socketWorkerCallback;
+        public Socket socketListener;
+        public Socket socketWorker;
 
         // Patient's names for now
         String p1, p2, p3, p4, p5, p6;
@@ -53,6 +58,8 @@ namespace CliniCycle
             // Insert code required on object creation below this point.
 
             CreateSocketConnection();
+
+            InitializeSockets();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
@@ -60,7 +67,7 @@ namespace CliniCycle
             this.sensorChooser = new KinectSensorChooser();
             this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
             this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
-            this.sensorChooser.Start();
+            //this.sensorChooser.Start();
 
             // Bind the sensor chooser's current sensor to the KinectRegion
             var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
@@ -139,37 +146,22 @@ namespace CliniCycle
                     return;
                 }
 
-                this.pixels = new byte[frame.PixelDataLength];
-                //MessageBox.Show(frame.PixelDataLength.ToString());
-                frame.CopyPixelDataTo(pixels);
-                //MessageBox.Show(pixels.Length.ToString());
+                if (pixels.Length == 0)
+                {
+                    pixels = new byte[frame.PixelDataLength];
 
-                //string tmp = pixels.Length.ToString();
-                //MessageBox.Show(tmp);
+                    //get the bitmap of the color frame
+                    outputImage = new WriteableBitmap(
+                        frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
 
+                    //show the patient feed video
+                    kinectPatientFeed.Source = outputImage;
+                }
                 //pixels appears to be 1228800 bytes long
 
-                //get the bitmap of the color frame
-                this.outputImage = new WriteableBitmap(
-                    frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
-
-                this.outputImage.WritePixels(
-                    new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
-
-                //show the patient feed video
-                this.kinectPatientFeed.Source = this.outputImage;
-
-                // Displays the top left video in the large screen when the top left video is clicked, not tested yet since no Kinect!
-                if (patientNum == 1)
-                {
-                    this.kinectPatientFeedLarge.Source = this.outputImage;
-                }
-                
-
                 //send the image to the patient
-                //socketClient.Send(this.pixels);
                 SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
-                arg.SetBuffer(this.pixels, 0, this.pixels.Length);
+                arg.SetBuffer(pixels, 0, pixels.Length);
                 arg.Completed += arg_Completed;
 
                 try
@@ -181,9 +173,19 @@ namespace CliniCycle
                     MessageBox.Show("error: " + se.ToString());
                 }
 
+                frame.CopyPixelDataTo(pixels);
+                //pixels appears to be 1228800 bytes long
+                outputImage.WritePixels(
+                    new Int32Rect(0, 0, frame.Width, frame.Height), pixels, frame.Width * 4, 0);
 
-                
-             
+                // Displays the top left video in the large screen when the top left video is clicked, not tested yet since no Kinect!
+                //Doesn't actually switch feeds
+                if (patientNum == 1)
+                {
+                    kinectPatientFeedLarge.Source = outputImage;
+                }
+
+                 
             };
 
 
@@ -443,7 +445,7 @@ namespace CliniCycle
             patientHeartrateBlock.Text = heartRate1.Content.ToString();
             patientOxygenSatBlock.Text = sat1.Content.ToString();
             //This will need to be changed to switch the video feed
-            this.kinectPatientFeedLarge.Source = outputImage;
+            kinectPatientFeedLarge.Source = outputImage;
 
         }
 
@@ -499,8 +501,127 @@ namespace CliniCycle
                 bioSocketWorker.Close();
         }
 
+        private void InitializeSockets()
+        {
+            try
+            {
+                //create listening socket
+                socketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
+                IPEndPoint iplocal = new IPEndPoint(addy, 8445);
+                //bind to local IP Address
+                socketListener.Bind(iplocal);
+                //start listening -- 4 is max connections queue, can be changed
+                socketListener.Listen(4);
+                //create call back for client connections -- aka maybe recieve video here????
+                socketListener.BeginAccept(new AsyncCallback(OnSocketConnection), null);
+            }
+            catch (SocketException e)
+            {
+                //something went wrong
+                MessageBox.Show(e.Message);
+            }
+
+        }
+
+        private void OnSocketConnection(IAsyncResult asyn)
+        {
+            try
+            {
+                socketWorker = socketListener.EndAccept(asyn);
+
+                WaitForData(socketWorker);
+            }
+            catch (ObjectDisposedException)
+            {
+                System.Diagnostics.Debugger.Log(0, "1", "\n OnSocketConnection: Socket has been closed\n");
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+        }
+
+        /// <summary>
+        /// The methods below are used to create a socket to read video frames from  
+        /// </summary>
+        public class SocketPacket
+        {
+            public System.Net.Sockets.Socket packetSocket;
+            public byte[] dataBuffer;
+
+        }
+
+        private void WaitForData(System.Net.Sockets.Socket soc)
+        {
+            try
+            {
+                if (socketWorkerCallback == null)
+                {
+                    socketWorkerCallback = new AsyncCallback(OnDataReceived);
+                }
+
+                SocketPacket sockpkt = new SocketPacket();
+                sockpkt.packetSocket = soc;
+
+                //need a buffer the size of 1 color frame
+                sockpkt.dataBuffer = new byte[1228800];
+
+                //start listening for data
+                soc.BeginReceive(sockpkt.dataBuffer, 0, sockpkt.dataBuffer.Length, SocketFlags.None, socketWorkerCallback, sockpkt);
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private void OnDataReceived(IAsyncResult asyn)
+        {
+            try
+            {
+                SocketPacket socketID = (SocketPacket)asyn.AsyncState;
+                //end receive
+                int end = 0;
+                end = socketID.packetSocket.EndReceive(asyn);
 
 
+                //byte[] tmp = new byte[end];
+                //MessageBox.Show("A:" + tmp.Length.ToString() + "---" + end.ToString());
+                //tmp = socketID.dataBuffer;
+
+
+                inputImage = new WriteableBitmap(
+                     640, 480, 96, 96, PixelFormats.Bgr32, null);
+
+                inputImage.WritePixels(
+                     new Int32Rect(0, 0, 640, 480), socketID.dataBuffer, 640 * 4, 0);
+
+                inputImage.Freeze();
+
+                if (inputImage != null)
+                {
+                    //we are in another thread need -- takes to main UI
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        kinectPatientFeed.Source = inputImage;
+
+                    }));
+                }
+
+                WaitForData(socketWorker);
+            }
+            catch (ObjectDisposedException)
+            {
+                System.Diagnostics.Debugger.Log(0, "1", "\nOnDataReceived: Socket has been closed\n");
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
+        }
 
 
 
