@@ -2,19 +2,22 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="LifeCycle" Height="300" Width="300" Background="White" ShowInTaskbar="False" Topmost="True" Foreground="#FF1F3378" FontFamily="Microsoft Uighur" FontSize="20" BorderBrush="#FF446078" ResizeMode="CanMinimize">
-    <Grid x:Name="grid1" Background="White">
+    <Grid x:Name="grid1" Background="White" KeyDown="grid1_KeyDown">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="145*"/>
-            <ColumnDefinition Width="147*"/>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="16*"/>
+            <ColumnDefinition Width="115*"/>
+            <ColumnDefinition Width="132*"/>
+            <ColumnDefinition Width="16*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="loginButton" Grid.ColumnSpan="2" Content="Login" HorizontalAlignment="Left" Margin="108,225,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="loginButton_Click" TabIndex="3" Background="#FF01A2E8" Foreground="White" BorderBrush="#FF01A2E8"/>
-        <PasswordBox x:Name="passwordBox" HorizontalAlignment="Left" Height="23" Margin="108,165,0,0" VerticalAlignment="Top" PasswordChar=" * " Width="120" Grid.ColumnSpan="2" Background="White" BorderBrush="#FF00A3E8" SelectionOpacity="5" ToolTip="Enter your password." TabIndex="2" Foreground="Black"/>
-        <TextBox x:Name="usernameBox" HorizontalAlignment="Left" Height="23" Margin="108,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Background="White" BorderBrush="#FF00A3E8" SelectionOpacity="5" ToolTip="Enter your password." TabIndex="1" Foreground="Black"/>
-        <TextBlock x:Name="loginBlock" HorizontalAlignment="Left" Margin="36,78,0,0" TextWrapping="Wrap" Text="Please login to begin." VerticalAlignment="Top" Grid.ColumnSpan="2" Width="231" Foreground="#FF01A2E8" FontWeight="Bold" FontSize="20"/>
-        <TextBlock x:Name="usernameBlock" HorizontalAlignment="Left" Margin="49,123,0,0" TextWrapping="Wrap" Text="username:" VerticalAlignment="Top" Foreground="#FF01A2E8"/>
-        <TextBlock x:Name="passwordBlock" HorizontalAlignment="Left" Margin="51,165,0,0" TextWrapping="Wrap" Text="password:" VerticalAlignment="Top" Foreground="#FF01A2E8"/>
-        <Label x:Name="lifeCycleLabel" Content="LifeCycle" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" FontSize="48" Grid.ColumnSpan="2" Width="292" Height="58" Background="#FF01A2E8"/>
-        <Image Margin="0,1,102,213" Source="heart_beat.png" Stretch="Fill" Grid.Column="1"/>
+        <Button x:Name="loginButton" Grid.ColumnSpan="2" Content="Login" HorizontalAlignment="Left" Margin="77,225,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="loginButton_Click" TabIndex="3" Background="#FF01A2E8" Foreground="White" BorderBrush="#FF01A2E8" Grid.Column="2"/>
+        <PasswordBox x:Name="passwordBox" HorizontalAlignment="Left" Height="23" Margin="77,165,0,0" VerticalAlignment="Top" PasswordChar=" * " Width="120" Grid.ColumnSpan="2" Background="White" BorderBrush="#FF00A3E8" SelectionOpacity="5" ToolTip="Enter your password." TabIndex="2" Foreground="Black" Grid.Column="2"/>
+        <TextBox x:Name="usernameBox" HorizontalAlignment="Left" Height="23" Margin="77,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Background="White" BorderBrush="#FF00A3E8" SelectionOpacity="5" ToolTip="Enter your password." TabIndex="1" Foreground="Black" Grid.Column="2"/>
+        <TextBlock x:Name="loginBlock" HorizontalAlignment="Left" Margin="5,78,0,0" TextWrapping="Wrap" Text="Please login to begin." VerticalAlignment="Top" Grid.ColumnSpan="2" Width="231" Foreground="#FF01A2E8" FontWeight="Bold" FontSize="20" Grid.Column="2"/>
+        <TextBlock x:Name="usernameBlock" HorizontalAlignment="Left" Margin="18,123,0,0" TextWrapping="Wrap" Text="username:" VerticalAlignment="Top" Foreground="#FF01A2E8" Grid.Column="2"/>
+        <TextBlock x:Name="passwordBlock" HorizontalAlignment="Left" Margin="20,165,0,0" TextWrapping="Wrap" Text="password:" VerticalAlignment="Top" Foreground="#FF01A2E8" Grid.Column="2"/>
+        <Label x:Name="lifeCycleLabel" Content="LifeCycle" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" FontSize="48" Grid.ColumnSpan="5" Width="292" Height="58" Background="#FF01A2E8"/>
+        <Image Margin="0,1,85.597,213" Source="heart_beat.png" Stretch="Fill" Grid.Column="3"/>
 
     </Grid>
 </Window>
