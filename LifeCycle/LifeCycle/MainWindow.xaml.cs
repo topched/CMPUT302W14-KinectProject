@@ -41,10 +41,9 @@ namespace LifeCycle
 
         private WriteableBitmap outputImage;
         private WriteableBitmap inputImage;
-        private byte[] pixels = new byte[0];
+        private byte[] pixels;
 
         public Socket socketToClinician;
-        public Socket socketClient;
 
         public string filePathHR = @"..\..\HR.txt";
         public string filePathOX = @"..\..\OX.txt";
@@ -53,10 +52,14 @@ namespace LifeCycle
         public StreamReader heartRateFile = null;
         public StreamReader oxygenSatFile = null;
         
-        public int secondsLeft = 2;
+        public int secondsLeft = 1800;
         public int minutesLeft = 30;
         public int heartRate = 135;
         public int OX = 1;
+        public int patientAge = 30;
+        public int maxHR = 220 - 30;
+        public SolidColorBrush encourageBrush = null;
+        public String encourageText = "";
 
         public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public bool workoutInProgress = false;
@@ -77,11 +80,15 @@ namespace LifeCycle
         public MainWindow()
         {
             InitializeComponent();
-            //Used to start a websocket server
+            // Used to start a websocket server.
             //InitializeWebSockets();
 
+            // Estimate patient's max heart rate.
+            maxHR = 220 - patientAge;
+
             CreateSocketConnection();
-            //used to start socket server
+
+            // Used to start socket server.
             InitializeSockets();
             InitializeBioSockets();
             
@@ -92,12 +99,8 @@ namespace LifeCycle
             serverProcess.StartInfo.FileName = "java";
 
             serverProcess.StartInfo.Arguments = @"~\ChatServer";
-            //serverProcess.Start();
+            serverProcess.Start();
 
-            
-
-
-            
             //updateDisplays();
             minutesLeft = (secondsLeft) / 60;
             timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
@@ -110,7 +113,7 @@ namespace LifeCycle
             this.sensorChooser = new KinectSensorChooser();
             this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
             this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
-            this.sensorChooser.Start();
+            //this.sensorChooser.Start();
 
             // Bind the sensor chooser's current sensor to the KinectRegion
             var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
@@ -225,35 +228,54 @@ namespace LifeCycle
                     byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
                     socketToClinician.Send(dataToClinician);
-                    // Set the UI in the main thread.
-                    this.Dispatcher.Invoke((Action)(() =>
+                    MessageBox.Show("Got stuff!");
+
+                    // Decide on what encouragement text should be displayed based on heart rate.
+                    if (data[0] == "HR")
                     {
-                        if (data[0] == "HR")
-                        {
+                            // Below target zone.
                             heartRateLabel.Content = data[1];
-                            if (Int32.Parse(data[1]) < 60)
-                            {
-                                encouragementBox.Foreground = new SolidColorBrush(Colors.Orange);
-                                encouragementBox.Content = "Speed up!";
+                            if (Int32.Parse(data[1]) < maxHR * 0.6)
+                            { 
+                                encourageBrush = new SolidColorBrush(Colors.Orange);
+                                encourageText = "Speed up!";
                             }
-                            else if (Int32.Parse(data[1]) > 165)
+
+                            // Above target zone.
+                            else if (Int32.Parse(data[1]) > maxHR * 0.8)
                             {
-                                encouragementBox.Foreground = new SolidColorBrush(Colors.Cyan);
-                                encouragementBox.Content = "Slow down!";
+                                encourageBrush = new SolidColorBrush(Colors.Cyan);
+                                encourageText = "Slow down!";
                             }
+
+                            // Within target zone.
                             else
                             {
-                                encouragementBox.Foreground = new SolidColorBrush(Colors.MediumVioletRed);
-                                encouragementBox.Content = "Keep it up!";
+                                encourageBrush = new SolidColorBrush(Colors.MediumVioletRed);
+                                encourageText = "Keep it up!";
                             }
-                        }
-
-                        else if (data[0] == "OX")
-                            oxygenSatLabel.Content = data[1] + " %";
-                    }));
-                }
-                    WaitForBioData(bioSocketWorker);
+                    
                 
+
+                    
+                    // Make the changes in the UI thread.
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                                encouragementBox.Foreground = encourageBrush;
+                                encouragementBox.Content = encourageText;
+ 
+                    }));}
+
+                    // Change the Sats display in the UI thread.
+                    else if (data[0] == "OX")
+                        this.Dispatcher.Invoke((Action)(() =>
+                        {
+                            oxygenSatLabel.Content = data[1] + " %";
+                        }));
+                        
+
+                }  
+                WaitForBioData(bioSocketWorker);
             }
             catch (ObjectDisposedException)
             {
@@ -362,19 +384,19 @@ namespace LifeCycle
 
                 //doesnt want to write to the clinitian feed
 
-                inputImage = new WriteableBitmap(
+                this.inputImage = new WriteableBitmap(
                     640, 480, 96, 96, PixelFormats.Bgr32, null);
 
-               inputImage.WritePixels(
+               this.inputImage.WritePixels(
                     new Int32Rect(0, 0, 640, 480), tmp, 640 * 4, 0);
 
-               inputImage.Freeze();
 
+                //errors in the two lines above -- Not to sure why
 
                 //we are in another thread need -- takes to main UI
                 this.Dispatcher.Invoke((Action)(() =>
                     {
-                        kinectClinitianFeed.Source = inputImage;
+                        kinectClinitianFeed.Source = this.inputImage;
                         //MessageBox.Show("message");
                         //showOptionsButton.Content = tmp.Length.ToString();
 
@@ -492,50 +514,27 @@ namespace LifeCycle
                     return;
                 }
 
-                if (pixels.Length == 0)
-                {
-                    this.pixels = new byte[frame.PixelDataLength];
-                }
-                frame.CopyPixelDataTo(this.pixels);
+                this.pixels = new byte[frame.PixelDataLength];
+                frame.CopyPixelDataTo(pixels);
 
-                SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
-                arg.SetBuffer(this.pixels, 0, this.pixels.Length);
-                arg.Completed += arg_Completed;
-
-                //MessageBox.Show(pixels.Length.ToString());
-
-                if (this.pixels.Length == 1228800)
-                {
-                    try
-                    {
-                        //socketClient.SendAsync(arg);
-                        socketClient.Send(pixels);
-                    }
-                    catch (SocketException se)
-                    {
-                        MessageBox.Show("Error: " + se.ToString());
-                    }
-                }
-
-
-                outputImage = new WriteableBitmap(
-                    frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
-
+                //string tmp = pixels.Length.ToString();
+                //MessageBox.Show(tmp);
 
                 //pixels appears to be 1228800 bytes long
-                outputImage.WritePixels(
+
+                //get the bitmap of the color frame
+                this.outputImage = new WriteableBitmap(
+                    frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
+
+                this.outputImage.WritePixels(
                     new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
 
-                kinectPatientFeed.Source = outputImage;
+                //show the patient feed video
+                this.kinectPatientFeed.Source = this.outputImage;
 
             };
 
            
-        }
-
-        void arg_Completed(object sender, SocketAsyncEventArgs e)
-        {
-            //
         }
 
         /// <summary>
@@ -656,16 +655,11 @@ namespace LifeCycle
             {
                 //create a new client socket
                 socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 //local host for now w/ port 8444
                 System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse("127.0.0.1");
                 System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 4443);
                 socketToClinician.Connect(remoteEndPoint);
-
-                System.Net.IPEndPoint endPoint = new System.Net.IPEndPoint(remoteIPAddy, 8445);
-                socketClient.Connect(endPoint);
-
 
             }
             catch (SocketException e)
@@ -712,6 +706,7 @@ namespace LifeCycle
             
         }
 
-       
+        
+
     }
 }
