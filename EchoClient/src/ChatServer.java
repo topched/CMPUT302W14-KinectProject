@@ -1,3 +1,4 @@
+
 /*************************************************************************
  *  Compilation:  javac ChatServer.java 
  *  Execution:    java ChatServer
@@ -46,7 +47,7 @@ public class ChatServer {
 			connections.add(connection);
 			connection.start();
 		}
-
+		
 
 	}
 

@@ -1,10 +1,10 @@
 ﻿<Window
+        xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:k="http://schemas.microsoft.com/kinect/2013"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="LifeCycle.MainWindow"
         Title="MainWindow" Height="768" Width="1024" Background="#FFF7F1F1" ResizeMode="CanMinimize">
-
 
     <Grid Margin="0,10,2,0">
         <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi" />
@@ -24,7 +24,7 @@
                     </Border>
                     <k:KinectTileButton Content="Options" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="60,294,0,0" VerticalAlignment="Top" Width="250" x:Name="showOptionsButton" Click="showOptionsButton_Click" Height="150" Background="White" Foreground="#FF01A2E8" FontSize="48" FontFamily="Microsoft Uighur"/>
                 </Grid>
-                <Grid HorizontalAlignment="Left" Height="737" VerticalAlignment="Top" Width="678" Margin="288,-9,-13,-29" Background="White">
+                <Grid HorizontalAlignment="Left" Height="737" VerticalAlignment="Top" Width="678" Margin="288,10,-13,-47" Background="White">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="278*"/>
                         <RowDefinition Height="176*"/>
@@ -36,9 +36,18 @@
                     <Label Content="LifeCycle" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" FontSize="100" FontWeight="Bold" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="118" Width="295"/>
                     <Label x:Name="startWorkoutCountdownLabel" Content=""  Margin="292,7,240.597,179" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="64" FontWeight="Black" Foreground="#FFDE6D0F" Width="419" d:IsHidden="True" Grid.Row="2" Height="95"/>
                     <k:KinectTileButton Content="Done" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="343,109.419,0,0" VerticalAlignment="Top" Width="250" x:Name="closeOptionsButton" Click="closeOptionsButton_Click" Height="150" Background="#FF01A2E8" Foreground="White" Grid.Row="3" Visibility="Hidden"/>
-                    <Label x:Name="heartRateLabel" Content="" HorizontalAlignment="Left" Margin="204,51.419,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="62" Width="134"/>
-                    <Label x:Name="oxygenSatLabel" Content="" HorizontalAlignment="Left" Margin="409,51.419,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="62" Width="161"/>
-                    <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="29,119.419,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Background="White" Foreground="#FF01A2E8" Grid.Row="2" Height="88" Width="331" Grid.RowSpan="2"/>
+                    <Label x:Name="heartRateLabel" Content="" HorizontalAlignment="Left" Margin="206,58,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="56" Width="134" RenderTransformOrigin="0.5,0.5">
+                        <Label.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform AngleX="1.061"/>
+                                <RotateTransform/>
+                                <TranslateTransform X="0.481"/>
+                            </TransformGroup>
+                        </Label.RenderTransform>
+                    </Label>
+                    <Label x:Name="oxygenSatLabel" Content="" HorizontalAlignment="Left" Margin="75,120,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="52" Width="161"/>
+                    <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="10,26.418,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Background="White" Foreground="#FF01A2E8" Grid.Row="2" Height="88" Width="331"/>
                     <k:KinectScrollViewer x:Name="selectTimeScrollViewer" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Margin="0,30,0,0" VerticalAlignment="Top" Height="195" Width="570" Foreground="#FF01A2E8" Grid.RowSpan="2" Grid.Row="1" Visibility="Hidden">
                         <k:KinectScrollViewer.HoverBackground>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -49,10 +58,26 @@
                         <StackPanel Orientation="Horizontal" x:Name="workoutTimeScrollContent" />
                     </k:KinectScrollViewer>
                     <Label x:Name="optionsTimeLabel" Content="Select workout length in minutes:" HorizontalAlignment="Left" Margin="94,203,0,0" VerticalAlignment="Top" Height="55" Width="484" FontSize="32" Foreground="#FF01A2E8" Visibility="Hidden"/>
-                    <Label x:Name="heartRateLabel_Copy" Content="heartrate (BPM):" HorizontalAlignment="Left" Margin="10,56.419,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="62" Width="194"/>
-                    <Label x:Name="heartRateLabel_Copy1" Content="Sats:" HorizontalAlignment="Left" Margin="343,56.419,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="62" Width="60"/>
+                    <Label x:Name="heartRateLabel1" Content="heart rate (BPM):" HorizontalAlignment="Left" Margin="10,0,0,157" Grid.Row="3" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="48" Width="194"/>
+                    <Label x:Name="satsLabel1" Content="Sats:" HorizontalAlignment="Left" Margin="10,125,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="42" Width="60"/>
                     <Label x:Name="encouragementBox" Content="" HorizontalAlignment="Left" Margin="79,0,0,0" Grid.Row="1" VerticalAlignment="Top" Height="110" Width="400" FontSize="72" FontFamily="Microsoft Uighur"/>
                     <Image Margin="310,0,259,57" Source="heart_beat.png" Stretch="Fill"/>
+                    <Label x:Name="bloodPressureLabel1" Content="blood pressure:" HorizontalAlignment="Left" Margin="10,0,0,219" Grid.Row="3" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="46" Width="174"/>
+                    <Label x:Name="bloodPressureLabel" Content="" HorizontalAlignment="Left" Margin="189,0,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="56" Width="183"/>
+                    <d3:ChartPlotter x:Name="plotter" Grid.Row="2" Margin="377,120,-1,153" Grid.RowSpan="2">
+                        <d3:ChartPlotter.HorizontalAxis>
+                            <d3:HorizontalDateTimeAxis Name="dateAxis"/>
+                        </d3:ChartPlotter.HorizontalAxis>
+                        <d3:Header FontFamily="Microsoft Uighur" Content="ECG" Foreground="#FF01A2E8"/>
+                        <d3:VerticalAxisTitle FontFamily="Microsoft Uighur" Content="ECG" Foreground="#FF01A2E8"/>
+                        <d3:HorizontalAxisTitle FontFamily="Microsoft Uighur" Content="Time" Foreground="#FF01A2E8"/>
+                        <d3:HorizontalLine Value="{Binding MaxVoltage}" Stroke="Red" StrokeThickness="2"/>
+                        <d3:HorizontalLine Value="{Binding MinVoltage}" Stroke="Red" StrokeThickness="2"/>
+                    </d3:ChartPlotter>
+
+                    <Grid/>
+
+
 
                 </Grid>
 

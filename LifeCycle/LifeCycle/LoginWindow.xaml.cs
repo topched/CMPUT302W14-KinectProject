@@ -41,5 +41,11 @@ namespace LifeCycle
                 FocusManager.SetFocusedElement(grid1, passwordBox);
             }
         }
+
+        private void grid1_KeyDown(object sender, KeyEventArgs e)
+        {
+               if (e.Key == Key.Enter)
+                    loginButton_Click(sender, e); //here LoginButton_Click is click eventhandler
+        }
     }
 }

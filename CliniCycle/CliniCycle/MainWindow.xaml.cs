@@ -45,6 +45,9 @@ namespace CliniCycle
         public Socket socketListener;
         public Socket socketWorker;
 
+        public String bloodPressure;
+        Random rnd;
+
         // Patient's names for now
         String p1, p2, p3, p4, p5, p6;
 
@@ -320,6 +323,7 @@ namespace CliniCycle
                 int end = 0;
                 end = socketID.packetSocket.EndReceive(asyn);
 
+          
                 char[] chars = new char[end + 1];
                 System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
@@ -327,16 +331,19 @@ namespace CliniCycle
 
                 // Parse the data.
                 tmp = Regex.Replace(tmp, @"\t|\n|\r", " ");
+             
                 System.String[] name = tmp.Split('|');
                 System.String[] data = name[1].Split(' ');
 
+                // fake blood pressure data
+                System.String[] bp = new String[1] {"BP"};
+                
                 p1 = "patient1";
                 p2 = "patient2";
                 p3 = "patient3";
                 p4 = "patient4";
                 p5 = "patient5";
                 p6 = "patient6";
-
                 // Set the UI in the main thread.
                 this.Dispatcher.Invoke((Action)(() =>
                 {   
@@ -449,6 +456,46 @@ namespace CliniCycle
                         if (name[0] == p6){
                             sat6.Content = "Oxygen Sat: " + data[1] + "%";
                             if (patientNum == 6) patientOxygenSatBlock.Text = data[1] + "%";
+                        }
+                    }
+
+                    else if (bp[0] == "BP")
+                    {
+                        if (name[0] == p1)
+                        {
+                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
+                            bloodPressure1.Content = bloodPressure;
+                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
+                        }
+                        if (name[0] == p2)
+                        {
+                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
+                            bloodPressure2.Content = bloodPressure;
+                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
+                        }
+                        if (name[0] == p3)
+                        {
+                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
+                            bloodPressure3.Content = bloodPressure;
+                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
+                        }
+                        if (name[0] == p4)
+                        {
+                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
+                            bloodPressure4.Content = bloodPressure;
+                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
+                        }
+                        if (name[0] == p5)
+                        {
+                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
+                            bloodPressure5.Content = bloodPressure;
+                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
+                        }
+                        if (name[0] == p6)
+                        {
+                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
+                            bloodPressure6.Content = bloodPressure;
+                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
                         }
                     }
                 }));
