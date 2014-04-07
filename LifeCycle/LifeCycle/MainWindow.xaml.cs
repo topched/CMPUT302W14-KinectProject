@@ -131,8 +131,10 @@ namespace LifeCycle
 
             //fill the time buttons for the workout time selection
             SolidColorBrush brush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF01A2E8"));
-
+            
+            _Random = new Random();
             EditPlotter();
+            
             for (int i = 1; i < 7; i++)
             {
                 var timeSelectionButton = new KinectCircleButton{
@@ -158,12 +160,14 @@ namespace LifeCycle
             _source.SetXMapping(ci => TimeSpan.FromTicks(ci.Date.Ticks).TotalDays);
 
             _source.SetYMapping(p => p.Price);
-
+            
             dateAxis.ConvertToDouble = dt => TimeSpan.FromTicks(dt.Ticks).TotalDays;
             dateAxis.ConvertFromDouble = d => new DateTime(TimeSpan.FromDays(d).Ticks);
 
-            // Add graph. Colors are not specified and chosen random
 
+            // Add graph. Colors are not specified and chosen random
+            plotter.VerticalAxis.Remove();
+            plotter.HorizontalAxis.Remove();
             plotter.AddLineGraph(_source, 2, "ECG");
 
             // Force everyting to fit in view
@@ -268,62 +272,70 @@ namespace LifeCycle
                     
                     byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
-                    socketToClinician.Send(dataToClinician);
+                    //socketToClinician.Send(dataToClinician);
                     MessageBox.Show("Got stuff!");
 
                     // Decide on what encouragement text should be displayed based on heart rate.
                     if (data[0] == "HR")
                     {
-                            // Below target zone.
-                            heartRateLabel.Content = data[1];
-                            if (Int32.Parse(data[1]) < maxHR * 0.6)
-                            { 
-                                encourageBrush = new SolidColorBrush(Colors.Orange);
-                                encourageText = "Speed up!";
-                            }
+                        // Below target zone.
+                        this.Dispatcher.Invoke((Action)(() =>
+                          {
+                              heartRateLabel.Content = data[1];
+                          }));
+                        /*if (Int32.Parse(data[1]) < maxHR * 0.6)
+                        {
+                            encourageBrush = new SolidColorBrush(Colors.Orange);
+                            encourageText = "Speed up!";
+                        }
 
-                            // Above target zone.
-                            else if (Int32.Parse(data[1]) > maxHR * 0.8)
-                            {
-                                encourageBrush = new SolidColorBrush(Colors.Cyan);
-                                encourageText = "Slow down!";
-                            }
+                        // Above target zone.
+                        else if (Int32.Parse(data[1]) > maxHR * 0.8)
+                        {
+                            encourageBrush = new SolidColorBrush(Colors.Cyan);
+                            encourageText = "Slow down!";
+                        }
 
-                            // Within target zone.
-                            else
-                            {
-                                encourageBrush = new SolidColorBrush(Colors.MediumVioletRed);
-                                encourageText = "Keep it up!";
-                            }
-                                       
-                    // Make the changes in the UI thread.
-                    this.Dispatcher.Invoke((Action)(() =>
-                    {
-                                encouragementBox.Foreground = encourageBrush;
-                                encouragementBox.Content = encourageText;
- 
-                    }));}
+                        // Within target zone.
+                        else
+                        {
+                            encourageBrush = new SolidColorBrush(Colors.MediumVioletRed);
+                            encourageText = "Keep it up!";
+                        }
+                        */
+                        // Make the changes in the UI thread.
+                        this.Dispatcher.Invoke((Action)(() =>
+                        {
+                            encouragementBox.Foreground = encourageBrush;
+                            encouragementBox.Content = encourageText;
+
+                        }));
+                    }
 
                     // Change the Sats display in the UI thread.
                     else if (data[0] == "OX")
+                    {
                         this.Dispatcher.Invoke((Action)(() =>
                         {
                             oxygenSatLabel.Content = data[1] + " %";
                         }));
+                    }
                     
                     if (fakeBP[0] == "BP")
                     {
+                        bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
                         this.Dispatcher.Invoke((Action)(() =>
                         {
-                            bloodPressure = rnd.Next(70,190) + "/" + rnd.Next(40,100);
-                            bloodPressureLabel1.Content = bloodPressure;
+                            
+                            bloodPressureLabel.Content = bloodPressure;
                         }));
                     }
-
-                    Trade trade = new Trade(DateTime.Now, _Random.NextDouble());
-
+                    
+                    Trade trade = new Trade(DateTime.Now, _Random.Next(0, 100));
+                    this.Dispatcher.Invoke((Action)(() =>
+                        {
                     _source.AppendAsync(Dispatcher, trade);
-
+                        }));
      
                         
 
@@ -711,7 +723,7 @@ namespace LifeCycle
 
                 //local host for now w/ port 8444
                 System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse("127.0.0.1");
-                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 4443);
+                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 8444);
                 socketToClinician.Connect(remoteEndPoint);
 
             }
