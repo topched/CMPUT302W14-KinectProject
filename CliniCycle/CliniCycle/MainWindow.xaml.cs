@@ -156,8 +156,37 @@ namespace CliniCycle
 
                     //show the patient feed video
                     kinectPatientFeed.Source = outputImage;
+
+                    // Show the patient feed in the large display. 
+                    // **********************************************************************************************
+                    // NOT TESTED - NO KINECT
+                    // **********************************************************************************************
+                    switch (patientNum)
+                    {
+                        case 1:
+                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed.Source;
+                            break;
+                        case 2:
+                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed2.Source;
+                            break;
+                        case 3:
+                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed3.Source;
+                            break;
+                        case 4:
+                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed4.Source;
+                            break;
+                        case 5:
+                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed5.Source;
+                            break;
+                        case 6:
+                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed6.Source;
+                            break;
+                        default:
+                            break;
+                    }
+                    if (bigOutputImage != null) kinectPatientFeedLarge.Source = bigOutputImage;
                 }
-                //pixels appears to be 1228800 bytes long
+                //pixels appear to be 1228800 bytes long
 
                 //send the image to the patient
                 SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
@@ -180,10 +209,7 @@ namespace CliniCycle
 
                 // Displays the top left video in the large screen when the top left video is clicked, not tested yet since no Kinect!
                 //Doesn't actually switch feeds
-                if (patientNum == 1)
-                {
-                    kinectPatientFeedLarge.Source = outputImage;
-                }
+
 
                  
             };
@@ -294,21 +320,23 @@ namespace CliniCycle
                 int end = 0;
                 end = socketID.packetSocket.EndReceive(asyn);
 
-                //just getting simple text right now -- needs to be changed
                 char[] chars = new char[end + 1];
                 System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
+
+                // Parse the data.
                 tmp = Regex.Replace(tmp, @"\t|\n|\r", " ");
-                // MessageBox.Show(tmp);
                 System.String[] name = tmp.Split('|');
                 System.String[] data = name[1].Split(' ');
+
                 p1 = "patient1";
                 p2 = "patient2";
                 p3 = "patient3";
                 p4 = "patient4";
                 p5 = "patient5";
                 p6 = "patient6";
+
                 // Set the UI in the main thread.
                 this.Dispatcher.Invoke((Action)(() =>
                 {   
@@ -444,9 +472,6 @@ namespace CliniCycle
             patientNum = 1;
             patientHeartrateBlock.Text = heartRate1.Content.ToString();
             patientOxygenSatBlock.Text = sat1.Content.ToString();
-            //This will need to be changed to switch the video feed
-            kinectPatientFeedLarge.Source = outputImage;
-
         }
 
         private void patient2_Click(object sender, RoutedEventArgs e)
