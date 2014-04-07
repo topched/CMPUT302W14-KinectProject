@@ -27,7 +27,9 @@ using Fleck;
 //for regular sockets
 using System.Net;
 using System.Net.Sockets;
-
+using Microsoft.Research.DynamicDataDisplay;
+using Microsoft.Research.DynamicDataDisplay.DataSources;
+using System.ComponentModel;
 namespace LifeCycle
 {
     /// <summary>
@@ -58,6 +60,11 @@ namespace LifeCycle
         public int OX = 1;
         public int patientAge = 30;
         public int maxHR = 220 - 30;
+
+        public String bloodPressure;
+        public int ECG;
+        Random rnd = new Random();
+
         public SolidColorBrush encourageBrush = null;
         public String encourageText = "";
 
@@ -76,6 +83,9 @@ namespace LifeCycle
         private AsyncCallback socketBioWorkerCallback;
         public Socket socketBioListener;
         public Socket bioSocketWorker;
+
+        private ObservableDataSource<Trade> _source;
+        private Random _Random;
 
         public MainWindow()
         {
@@ -121,6 +131,8 @@ namespace LifeCycle
 
             //fill the time buttons for the workout time selection
             SolidColorBrush brush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF01A2E8"));
+
+            EditPlotter();
             for (int i = 1; i < 7; i++)
             {
                 var timeSelectionButton = new KinectCircleButton{
@@ -136,6 +148,30 @@ namespace LifeCycle
 
 
         }
+
+        public void EditPlotter()
+        {
+            _source = new ObservableDataSource<Trade>();
+
+            // Set identity mapping of point in collection to point on plot
+
+            _source.SetXMapping(ci => TimeSpan.FromTicks(ci.Date.Ticks).TotalDays);
+
+            _source.SetYMapping(p => p.Price);
+
+            dateAxis.ConvertToDouble = dt => TimeSpan.FromTicks(dt.Ticks).TotalDays;
+            dateAxis.ConvertFromDouble = d => new DateTime(TimeSpan.FromDays(d).Ticks);
+
+            // Add graph. Colors are not specified and chosen random
+
+            plotter.AddLineGraph(_source, 2, "ECG");
+
+            // Force everyting to fit in view
+
+            plotter.Viewport.FitToView();
+
+        }
+
         /// <summary>
         /// Sets the connection for biometrics.
         /// </summary>
@@ -221,10 +257,15 @@ namespace LifeCycle
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
                 System.String[] name = tmp.Split('|');
+
+                System.String[] fakeBP = new String[1] { "BP" };
+                System.String[] fakeECG = new String[1] { "ECG" }; 
+
+
                 if (name.Length == 2)
                 {
                     System.String[] data = name[1].Split(' ');
-
+                    
                     byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
                     socketToClinician.Send(dataToClinician);
@@ -254,10 +295,7 @@ namespace LifeCycle
                                 encourageBrush = new SolidColorBrush(Colors.MediumVioletRed);
                                 encourageText = "Keep it up!";
                             }
-                    
-                
-
-                    
+                                       
                     // Make the changes in the UI thread.
                     this.Dispatcher.Invoke((Action)(() =>
                     {
@@ -272,6 +310,21 @@ namespace LifeCycle
                         {
                             oxygenSatLabel.Content = data[1] + " %";
                         }));
+                    
+                    if (fakeBP[0] == "BP")
+                    {
+                        this.Dispatcher.Invoke((Action)(() =>
+                        {
+                            bloodPressure = rnd.Next(70,190) + "/" + rnd.Next(40,100);
+                            bloodPressureLabel1.Content = bloodPressure;
+                        }));
+                    }
+
+                    Trade trade = new Trade(DateTime.Now, _Random.NextDouble());
+
+                    _source.AppendAsync(Dispatcher, trade);
+
+     
                         
 
                 }  
@@ -709,4 +762,18 @@ namespace LifeCycle
         
 
     }
+
+    public class Trade
+    {
+
+        public DateTime Date { get; set; }
+
+        public double Price { get; set; }
+        public Trade(DateTime dateTime, double price)
+        {
+            Date = dateTime;
+            Price = price;
+        }
+    }
+
 }
