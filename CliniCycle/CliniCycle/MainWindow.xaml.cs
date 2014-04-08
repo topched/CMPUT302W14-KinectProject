@@ -45,9 +45,6 @@ namespace CliniCycle
         public Socket socketListener;
         public Socket socketWorker;
 
-        public String bloodPressure;
-        Random rnd;
-
         // Patient's names for now
         String p1, p2, p3, p4, p5, p6;
 
@@ -159,37 +156,8 @@ namespace CliniCycle
 
                     //show the patient feed video
                     kinectPatientFeed.Source = outputImage;
-
-                    // Show the patient feed in the large display. 
-                    // **********************************************************************************************
-                    // NOT TESTED - NO KINECT
-                    // **********************************************************************************************
-                    switch (patientNum)
-                    {
-                        case 1:
-                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed.Source;
-                            break;
-                        case 2:
-                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed2.Source;
-                            break;
-                        case 3:
-                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed3.Source;
-                            break;
-                        case 4:
-                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed4.Source;
-                            break;
-                        case 5:
-                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed5.Source;
-                            break;
-                        case 6:
-                            bigOutputImage = (System.Windows.Media.Imaging.WriteableBitmap)kinectPatientFeed6.Source;
-                            break;
-                        default:
-                            break;
-                    }
-                    if (bigOutputImage != null) kinectPatientFeedLarge.Source = bigOutputImage;
                 }
-                //pixels appear to be 1228800 bytes long
+                //pixels appears to be 1228800 bytes long
 
                 //send the image to the patient
                 SocketAsyncEventArgs arg = new SocketAsyncEventArgs();
@@ -212,7 +180,10 @@ namespace CliniCycle
 
                 // Displays the top left video in the large screen when the top left video is clicked, not tested yet since no Kinect!
                 //Doesn't actually switch feeds
-
+                if (patientNum == 1)
+                {
+                    kinectPatientFeedLarge.Source = outputImage;
+                }
 
                  
             };
@@ -323,21 +294,15 @@ namespace CliniCycle
                 int end = 0;
                 end = socketID.packetSocket.EndReceive(asyn);
 
-          
+                //just getting simple text right now -- needs to be changed
                 char[] chars = new char[end + 1];
                 System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
-
-                // Parse the data.
                 tmp = Regex.Replace(tmp, @"\t|\n|\r", " ");
-             
+                MessageBox.Show(tmp);
                 System.String[] name = tmp.Split('|');
                 System.String[] data = name[1].Split(' ');
-
-                // fake blood pressure data
-                System.String[] bp = new String[1] {"BP"};
-                
                 p1 = "patient1";
                 p2 = "patient2";
                 p3 = "patient3";
@@ -458,46 +423,11 @@ namespace CliniCycle
                             if (patientNum == 6) patientOxygenSatBlock.Text = data[1] + "%";
                         }
                     }
-
-                    else if (bp[0] == "BP")
+                    else if (data[0] == "BP")
                     {
-                        if (name[0] == p1)
-                        {
-                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
-                            bloodPressure1.Content = bloodPressure;
-                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
-                        }
-                        if (name[0] == p2)
-                        {
-                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
-                            bloodPressure2.Content = bloodPressure;
-                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
-                        }
-                        if (name[0] == p3)
-                        {
-                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
-                            bloodPressure3.Content = bloodPressure;
-                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
-                        }
-                        if (name[0] == p4)
-                        {
-                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
-                            bloodPressure4.Content = bloodPressure;
-                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
-                        }
-                        if (name[0] == p5)
-                        {
-                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
-                            bloodPressure5.Content = bloodPressure;
-                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
-                        }
-                        if (name[0] == p6)
-                        {
-                            bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
-                            bloodPressure6.Content = bloodPressure;
-                            if (patientNum == 1) BloodPressureBlock.Text = bloodPressure;
-                        }
+                        if (patientNum == 1) patientBloodPressureBlock.Text = data[1];
                     }
+                       
                 }));
 
                 WaitForBioData(bioSocketWorker);
@@ -519,6 +449,9 @@ namespace CliniCycle
             patientNum = 1;
             patientHeartrateBlock.Text = heartRate1.Content.ToString();
             patientOxygenSatBlock.Text = sat1.Content.ToString();
+            //This will need to be changed to switch the video feed
+            kinectPatientFeedLarge.Source = outputImage;
+
         }
 
         private void patient2_Click(object sender, RoutedEventArgs e)
@@ -579,7 +512,8 @@ namespace CliniCycle
             {
                 //create listening socket
                 socketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
+                //IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
+                IPAddress addy = new IPAddress(new byte[] { 0, 0, 0, 0 });
                 IPEndPoint iplocal = new IPEndPoint(addy, 8445);
                 //bind to local IP Address
                 socketListener.Bind(iplocal);
@@ -677,7 +611,7 @@ namespace CliniCycle
                     //we are in another thread need -- takes to main UI
                     Dispatcher.Invoke((Action)(() =>
                     {
-                        kinectPatientFeed.Source = inputImage;
+                        kinectPatientFeedLarge.Source = inputImage;
 
                     }));
                 }

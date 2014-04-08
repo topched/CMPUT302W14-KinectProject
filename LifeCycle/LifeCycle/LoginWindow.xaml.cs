@@ -44,8 +44,8 @@ namespace LifeCycle
 
         private void grid1_KeyDown(object sender, KeyEventArgs e)
         {
-               if (e.Key == Key.Enter)
-                    loginButton_Click(sender, e); //here LoginButton_Click is click eventhandler
+            if (e.Key == Key.Enter)
+                loginButton_Click(sender, e); //here LoginButton_Click is click eventhandler
         }
     }
 }
