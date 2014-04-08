@@ -414,7 +414,7 @@ namespace LifeCycle
 
                 //placing a break-point right above we can see that tmp holds the data
 
-                //doesnt want to write to the clinitian feed
+                //doesnt want to write to the Clinician feed
 
                 inputImage = new WriteableBitmap(
                     640, 480, 96, 96, PixelFormats.Bgr32, null);
@@ -428,7 +428,7 @@ namespace LifeCycle
                 //we are in another thread need -- takes to main UI
                 this.Dispatcher.Invoke((Action)(() =>
                     {
-                        kinectClinitianFeed.Source = inputImage;
+                        kinectClinicianFeed.Source = inputImage;
                         //MessageBox.Show("message");
                         //showOptionsButton.Content = tmp.Length.ToString();
 
@@ -743,17 +743,6 @@ namespace LifeCycle
                 socketListener.Close();
             if (socketWorker != null)
                 socketWorker.Close();
-
-           /* MessageBoxResult result = MessageBox.Show("Are you sure you want to return to the login screen?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.Yes)
-            {
-                
-
-                // Close this window and open the loginWindow.
-                var newWindow = new LoginWindow();
-                newWindow.Show();
-                this.Close();
-            } */
         }
 
         void timeSelectionButton_Click(object sender, RoutedEventArgs e)

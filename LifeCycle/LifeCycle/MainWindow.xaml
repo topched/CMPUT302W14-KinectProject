@@ -20,7 +20,7 @@
                         <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="320" Height="240" Margin="-4" OpacityMask="Black"/>
                     </Border>
                     <Border BorderThickness="4" BorderBrush="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,10,0,10" Height="240" Width="320" Grid.RowSpan="2">
-                        <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectClinitianFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="320" Height="240" Margin="-4"/>
+                        <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectClinicianFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="320" Height="240" Margin="-4"/>
                     </Border>
                     <k:KinectTileButton Content="Options" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="60,294,0,0" VerticalAlignment="Top" Width="250" x:Name="showOptionsButton" Click="showOptionsButton_Click" Height="150" Background="White" Foreground="#FF01A2E8" FontSize="48" FontFamily="Microsoft Uighur"/>
                 </Grid>

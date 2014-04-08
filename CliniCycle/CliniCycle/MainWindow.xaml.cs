@@ -29,12 +29,18 @@ namespace CliniCycle
         private KinectSensorChooser sensorChooser;
         ColorImageFormat imageFormat = ColorImageFormat.RgbResolution640x480Fps30;
 
+        // The input and output images to be displayed.
         private WriteableBitmap outputImage;
-        private WriteableBitmap inputImage;
-        private WriteableBitmap bigOutputImage;
-        private byte[] pixels = new byte[0];
+        private WriteableBitmap inputImage1;
+        private WriteableBitmap inputImage2;
+        private WriteableBitmap inputImage3;
+        private WriteableBitmap inputImage4;
+        private WriteableBitmap inputImage5;
+        private WriteableBitmap inputImage6;
+        private WriteableBitmap bigInputImage;
 
         //for sockets
+        private byte[] pixels = new byte[0];
         public Socket socketClient;
 
         private AsyncCallback socketBioWorkerCallback;
@@ -178,14 +184,6 @@ namespace CliniCycle
                 outputImage.WritePixels(
                     new Int32Rect(0, 0, frame.Width, frame.Height), pixels, frame.Width * 4, 0);
 
-                // Displays the top left video in the large screen when the top left video is clicked, not tested yet since no Kinect!
-                //Doesn't actually switch feeds
-                if (patientNum == 1)
-                {
-                    kinectPatientFeedLarge.Source = outputImage;
-                }
-
-                 
             };
 
 
@@ -211,7 +209,8 @@ namespace CliniCycle
             }
             catch (SocketException e)
             {
-                MessageBox.Show(e.Message);
+                // Commented this out so that we don't get a message every time we start it. Is this ok? ****
+                //MessageBox.Show(e.Message);
             }
         }
 
@@ -449,8 +448,6 @@ namespace CliniCycle
             patientNum = 1;
             patientHeartrateBlock.Text = heartRate1.Content.ToString();
             patientOxygenSatBlock.Text = sat1.Content.ToString();
-            //This will need to be changed to switch the video feed
-            kinectPatientFeedLarge.Source = outputImage;
 
         }
 
@@ -598,22 +595,57 @@ namespace CliniCycle
                 //tmp = socketID.dataBuffer;
 
 
-                inputImage = new WriteableBitmap(
+                inputImage1 = new WriteableBitmap(
                      640, 480, 96, 96, PixelFormats.Bgr32, null);
 
-                inputImage.WritePixels(
+                inputImage1.WritePixels(
                      new Int32Rect(0, 0, 640, 480), socketID.dataBuffer, 640 * 4, 0);
 
-                inputImage.Freeze();
+                inputImage1.Freeze();
 
-                if (inputImage != null)
+                if (inputImage1 != null)
                 {
                     //we are in another thread need -- takes to main UI
                     Dispatcher.Invoke((Action)(() =>
                     {
-                        kinectPatientFeedLarge.Source = inputImage;
+                        kinectPatientFeed.Source = inputImage1;
+
 
                     }));
+
+                    // Determine which feed to send to the large frame.
+                    switch (patientNum)
+                    {
+                        case (1):
+                            bigInputImage = inputImage1;
+                            break;
+                        case (2):
+                            bigInputImage = inputImage2;
+                            break;
+                        case (3):
+                            bigInputImage = inputImage3;
+                            break;
+                        case (4):
+                            bigInputImage = inputImage4;
+                            break;
+                        case (5):
+                            bigInputImage = inputImage5;
+                            break;
+                        case (6):
+                            bigInputImage = inputImage6;
+                            break;
+                        default:
+                            break;
+                    }
+                    
+
+                    {
+                        Dispatcher.Invoke((Action)(() =>
+                        {
+                            kinectPatientFeedLarge.Source = bigInputImage;
+                        }));
+                        
+                    }
                 }
 
                 WaitForData(socketWorker);
