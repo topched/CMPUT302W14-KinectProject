@@ -43,7 +43,7 @@
                 <k:KinectTileButton x:Name="buttonPatient2" Content="Button" HorizontalAlignment="Left" Margin="175,16,0,0" VerticalAlignment="Top" Width="160" Height="120" Click="patient2_Click" Background="Black" Opacity="0" Grid.Row="1" Grid.ColumnSpan="2"/>
                 <k:KinectTileButton x:Name="buttonPatient3" HorizontalAlignment="Left" Margin="83,16,0,0" VerticalAlignment="Top" Width="160" Height="120" Click="patient3_Click" Background="Black" Opacity="0" Grid.Row="1" Grid.Column="1"/>
                 <k:KinectTileButton x:Name="buttonPatient4" Content="Button" HorizontalAlignment="Right" Margin="0,16,341,0" VerticalAlignment="Top" Width="160" Height="120" Click="patient4_Click" Background="Black" Opacity="0" Grid.Row="1" Grid.Column="1"/>
-                <Label Content="LifeCycle" HorizontalAlignment="Center" Margin="0,-18,-10,0" VerticalAlignment="Top" Width="1024" Height="116" Background="#FF01A2E8" Foreground="White" FontFamily="Microsoft Uighur" FontSize="72" RenderTransformOrigin="0.49,-0.246" Grid.RowSpan="2" Grid.ColumnSpan="3"/>
+                <Label Content="LifeCycle" HorizontalAlignment="Center" Margin="0,-18,-10,0" VerticalAlignment="Top" Width="1024" Height="116" Background="#FF01A2E8" Foreground="White" FontFamily="Microsoft Uighur" FontSize="100" RenderTransformOrigin="0.49,-0.246" Grid.RowSpan="2" Grid.ColumnSpan="3"/>
                 <Border x:Name="borderPatient5" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,16,176,0" Height="120" Width="160" Grid.Row="1" Grid.Column="1">
                     <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed5"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="-4" Width="160" Height="120"/>
                 </Border>
@@ -71,7 +71,6 @@
 
             </Grid>
         </k:KinectRegion>
-        <Image Margin="200,-14,726,651" Source="heart_beat.png" Stretch="Fill"/>
     </Grid>
 
 </Window>

@@ -605,6 +605,8 @@ namespace CliniCycle
 
                 if (inputImage1 != null)
                 {
+                    try
+                    {
                     //we are in another thread need -- takes to main UI
                     Dispatcher.Invoke((Action)(() =>
                     {
@@ -612,6 +614,12 @@ namespace CliniCycle
 
 
                     }));
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+
 
                     // Determine which feed to send to the large frame.
                     switch (patientNum)
