@@ -16,6 +16,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Drawing;
 
 namespace CliniCycle
 {
@@ -51,6 +52,9 @@ namespace CliniCycle
         public Socket socketListener;
         public Socket socketWorker;
 
+        public int maxHR;
+        public int age = 30;
+
         // Patient's names for now
         String p1, p2, p3, p4, p5, p6;
 
@@ -60,7 +64,6 @@ namespace CliniCycle
             Loaded += OnLoaded;
 
             InitializeBioSockets();
-
             // Insert code required on object creation below this point.
 
             CreateSocketConnection();
@@ -299,7 +302,7 @@ namespace CliniCycle
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
                 tmp = Regex.Replace(tmp, @"\t|\n|\r", " ");
-                MessageBox.Show(tmp);
+                //MessageBox.Show(tmp);
                 System.String[] name = tmp.Split('|');
                 System.String[] data = name[1].Split(' ');
                 p1 = "patient1";
@@ -308,23 +311,32 @@ namespace CliniCycle
                 p4 = "patient4";
                 p5 = "patient5";
                 p6 = "patient6";
+
+                maxHR = 220 - age;
+
+                System.Drawing.Color blue = ColorTranslator.FromHtml("#FF01A2E8");
+                System.Windows.Media.Color largeBlue = System.Windows.Media.Color.FromArgb(blue.A, blue.R, blue.G, blue.B);
+                blue = ColorTranslator.FromHtml("#FF0063FF");
+                System.Windows.Media.Color smallBlue = System.Windows.Media.Color.FromArgb(blue.A, blue.R, blue.G, blue.B);
+              
                 // Set the UI in the main thread.
                 this.Dispatcher.Invoke((Action)(() =>
-                {   
-                    if (data[0] == "HR") {
-  
+                {
 
+                    if (data[0] == "HR") {
                         if (name[0] == p1)
                         {
                             heartRate1.Content = "Heart Rate: " + data[1] + " bpm";
                             if (patientNum == 1)
                             {
                                 patientHeartrateBlock.Text = "Heart Rate: " + data[1] + " bpm";
-                                if (Int32.Parse(data[1]) > 165) patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
-                                else patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.White);
+                                if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6)
+                                    patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
+                                else patientHeartrateBlock.Foreground = new SolidColorBrush(largeBlue);
                             }
-                            if (Int32.Parse(data[1]) > 165) heartRate1.Foreground = new SolidColorBrush(Colors.Red);
-                            else heartRate1.Foreground = new SolidColorBrush(Colors.Black);
+                            if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) 
+                                heartRate1.Foreground = new SolidColorBrush(Colors.Red);
+                            else heartRate1.Foreground = new SolidColorBrush(smallBlue);
                         }
                         if (name[0] == p2)
                         {
@@ -332,11 +344,13 @@ namespace CliniCycle
                             if (patientNum == 2)
                             {
                                 patientHeartrateBlock.Text = "Heart Rate: " + data[1] + " bpm";
-                                if (Int32.Parse(data[1]) > 165) patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
-                                else patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.White);
+                                if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) 
+                                    patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
+                                else patientHeartrateBlock.Foreground = new SolidColorBrush(largeBlue);
                             }
-                            if (Int32.Parse(data[1]) > 165) heartRate2.Foreground = new SolidColorBrush(Colors.Red);
-                            else heartRate2.Foreground = new SolidColorBrush(Colors.Black);
+                            if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) 
+                                heartRate2.Foreground = new SolidColorBrush(Colors.Red);
+                            else heartRate2.Foreground = new SolidColorBrush(smallBlue);
                         }
                         if (name[0] == p3)
                         {
@@ -344,11 +358,12 @@ namespace CliniCycle
                             if (patientNum == 3)
                             {
                                 patientHeartrateBlock.Text = "Heart Rate: " + data[1] + " bpm";
-                                if (Int32.Parse(data[1]) > 165) patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
-                                else patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.White);
+                                if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) 
+                                    patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
+                                else patientHeartrateBlock.Foreground = new SolidColorBrush(largeBlue);
                             }
-                            if (Int32.Parse(data[1]) > 165) heartRate3.Foreground = new SolidColorBrush(Colors.Red);
-                            else heartRate3.Foreground = new SolidColorBrush(Colors.Black);
+                            if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) heartRate3.Foreground = new SolidColorBrush(Colors.Red);
+                            else heartRate3.Foreground = new SolidColorBrush(smallBlue);
                             
    
                         }
@@ -358,11 +373,13 @@ namespace CliniCycle
                             if (patientNum == 4)
                             {
                                 patientHeartrateBlock.Text = "Heart Rate: " + data[1] + " bpm";
-                                if (Int32.Parse(data[1]) > 165) patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
-                                else patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.White);
+                                if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6)
+                                    patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
+                                else patientHeartrateBlock.Foreground = new SolidColorBrush(largeBlue);
                             }
-                            if (Int32.Parse(data[1]) > 165) heartRate4.Foreground = new SolidColorBrush(Colors.Red);
-                            else heartRate4.Foreground = new SolidColorBrush(Colors.Black);
+                            if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) 
+                                heartRate4.Foreground = new SolidColorBrush(Colors.Red);
+                            else heartRate4.Foreground = new SolidColorBrush(smallBlue);
                         }
                         if (name[0] == p5)
                         {
@@ -370,11 +387,13 @@ namespace CliniCycle
                             if (patientNum == 5)
                             {
                                 patientHeartrateBlock.Text = "Heart Rate: " + data[1] + " bpm";
-                                if (Int32.Parse(data[1]) > 165)  patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
-                                else patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.White);
+                                if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) 
+                                    patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
+                                else patientHeartrateBlock.Foreground = new SolidColorBrush(largeBlue);
                             }
-                            if (Int32.Parse(data[1]) > 165) heartRate5.Foreground = new SolidColorBrush(Colors.Red);
-                            else heartRate5.Foreground = new SolidColorBrush(Colors.Black);
+                            if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) 
+                                heartRate5.Foreground = new SolidColorBrush(Colors.Red);
+                            else heartRate5.Foreground = new SolidColorBrush(smallBlue);
                         }
                         if (name[0] == p6)
                         {
@@ -382,12 +401,14 @@ namespace CliniCycle
                             if (patientNum == 6)
                             {
                                 patientHeartrateBlock.Text = "Heart Rate: " + data[1] + " bpm";
-                                if (Int32.Parse(data[1]) > 165) patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
-                                else patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.White);
+                                if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) 
+                                    patientHeartrateBlock.Foreground = new SolidColorBrush(Colors.Red);
+                                else patientHeartrateBlock.Foreground = new SolidColorBrush(largeBlue);
                             }
-                            if (Int32.Parse(data[1]) > 165) heartRate6.Foreground = new SolidColorBrush(Colors.Red);
+                            if (Int32.Parse(data[1]) > maxHR * 0.8 || Int32.Parse(data[1]) < maxHR * 0.6) 
+                                heartRate6.Foreground = new SolidColorBrush(Colors.Red);
                             else
-                                heartRate6.Foreground = new SolidColorBrush(Colors.Black);
+                                heartRate6.Foreground = new SolidColorBrush(smallBlue);
                         }
 
                     }
@@ -397,34 +418,35 @@ namespace CliniCycle
                         if (name[0] == p1)
                         {
                             sat1.Content = "Oxygen Sat: " + data[1] + "%";
-                            if (patientNum == 1) patientOxygenSatBlock.Text = data[1] + "%";
+                            if (patientNum == 1) patientOxygenSatBlock.Text = "Oxygen Sat: " + data[1] + "%";
                         }
                         if (name[0] == p2)
                         {
                             sat2.Content = "Oxygen Sat: " + data[1] + "%";
-                            if (patientNum == 2) patientOxygenSatBlock.Text = data[1] + "%";
+                            if (patientNum == 2) patientOxygenSatBlock.Text = "Oxygen Sat: " + data[1] + "%";
                         }
                         if (name[0] == p3)
                         {
                             sat3.Content = "Oxygen Sat: " + data[1] + "%";
-                            if (patientNum == 3) patientOxygenSatBlock.Text = data[1] + "%";
+                            if (patientNum == 3) patientOxygenSatBlock.Text = "Oxygen Sat: " + data[1] + "%";
                         }
                         if (name[0] == p4) { 
                             sat4.Content = "Oxygen Sat: " + data[1] + "%";
-                            if (patientNum == 4) patientOxygenSatBlock.Text = data[1] + "%";
+                            if (patientNum == 4) patientOxygenSatBlock.Text = "Oxygen Sat: " + data[1] + "%";
                         }
                         if (name[0] == p5){
                             sat5.Content = "Oxygen Sat: " + data[1] + "%";
-                            if (patientNum == 5) patientOxygenSatBlock.Text = data[1] + "%";
+                            if (patientNum == 5) patientOxygenSatBlock.Text = "Oxygen Sat: " + data[1] + "%";
                         }
                         if (name[0] == p6){
                             sat6.Content = "Oxygen Sat: " + data[1] + "%";
-                            if (patientNum == 6) patientOxygenSatBlock.Text = data[1] + "%";
+                            if (patientNum == 6) patientOxygenSatBlock.Text = "Oxygen Sat: " + data[1] + "%";
                         }
                     }
                     else if (data[0] == "BP")
                     {
-                        if (patientNum == 1) patientBloodPressureBlock.Text = data[1];
+                        data[1] = data[1].Remove(data[1].Length - 1);
+                        if (patientNum == 1) patientBloodPressureBlock.Text = "Blood Pressure: " + data[1];
                     }
                        
                 }));
@@ -448,6 +470,8 @@ namespace CliniCycle
             patientNum = 1;
             patientHeartrateBlock.Text = heartRate1.Content.ToString();
             patientOxygenSatBlock.Text = sat1.Content.ToString();
+            patientBloodPressureBlock.Text = "Blood Pressure: --";
+  
 
         }
 
@@ -457,6 +481,7 @@ namespace CliniCycle
             patientIDBlock.Text = p2;
             patientHeartrateBlock.Text = heartRate2.Content.ToString();
             patientOxygenSatBlock.Text = sat2.Content.ToString();
+            patientBloodPressureBlock.Text = "Blood Pressure: --";
         }
 
         private void patient3_Click(object sender, RoutedEventArgs e)
@@ -465,6 +490,7 @@ namespace CliniCycle
             patientIDBlock.Text = p3;
             patientHeartrateBlock.Text = heartRate3.Content.ToString(); 
             patientOxygenSatBlock.Text = sat3.Content.ToString();
+            patientBloodPressureBlock.Text = "Blood Pressure: --";
         }
 
         private void patient4_Click(object sender, RoutedEventArgs e)
@@ -473,7 +499,7 @@ namespace CliniCycle
             patientIDBlock.Text = p4;
             patientHeartrateBlock.Text = heartRate4.Content.ToString();
             patientOxygenSatBlock.Text = sat4.Content.ToString();
-
+            patientBloodPressureBlock.Text = "Blood Pressure: --";
         }
 
         private void patient5_Click(object sender, RoutedEventArgs e)
@@ -482,6 +508,7 @@ namespace CliniCycle
             patientIDBlock.Text = p5;
             patientHeartrateBlock.Text = heartRate5.Content.ToString();
             patientOxygenSatBlock.Text = sat5.Content.ToString();
+            patientBloodPressureBlock.Text = "Blood Pressure: --";
         }
         private void patient6_Click(object sender, RoutedEventArgs e)
         {
@@ -489,6 +516,7 @@ namespace CliniCycle
             patientIDBlock.Text = p6;
             patientHeartrateBlock.Text = heartRate6.Content.ToString();
             patientOxygenSatBlock.Text = sat6.Content.ToString();
+            patientBloodPressureBlock.Text = "Blood Pressure: --";
         }
 
         private void exitProgramButton_Click(object sender, RoutedEventArgs e)

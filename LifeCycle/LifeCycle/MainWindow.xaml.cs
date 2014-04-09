@@ -57,8 +57,9 @@ namespace LifeCycle
         public int minutesLeft = 30;
         public int heartRate = 135;
         public int OX = 1;
+        public int maxHR;
 
-        public String bloodPressure;
+        public System.String bloodPressure;
         Random rnd = new Random();
 
         public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
@@ -215,6 +216,9 @@ namespace LifeCycle
                 int end = 0;
                 end = socketID.packetSocket.EndReceive(asyn);
 
+                int age = 30;
+                maxHR = 220 - age;
+
                 //just getting simple text right now -- needs to be changed
                 char[] chars = new char[end + 1];
                 System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
@@ -228,20 +232,22 @@ namespace LifeCycle
                     //MessageBox.Show(tmp);
                 }
                 System.String[] name = tmp.Split('|');
-
-                System.String[] fakeBP = new String[1] { "BP" };
-                System.String[] fakeECG = new String[1] { "ECG" };
-
+                
+                // Fake blood pressure data
+                bloodPressure = "patient1|BP " + rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
+                System.String[] fakeName = bloodPressure.Split('|');
 
                 if (name.Length == 2)
                 {
-                    System.String[] data = name[1].Split(' ');
-
                     byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
-                    //socketToClinician.Send(dataToClinician);
+                    socketToClinician.Send(dataToClinician);
+                    dataToClinician = System.Text.Encoding.ASCII.GetBytes(bloodPressure);
+                    socketToClinician.Send(dataToClinician);
                     // MessageBox.Show("Got stuff!");
 
+                    System.String[] data = name[1].Split(' ');
+                    System.String[] fakeData = fakeName[1].Split(' ');
                     // Decide on what encouragement text should be displayed based on heart rate.
                     if (data[0] == "HR")
                     {
@@ -249,34 +255,30 @@ namespace LifeCycle
                         this.Dispatcher.Invoke((Action)(() =>
                         {
                             heartRateLabel.Content = data[1];
-                        }));
-                        /* if (Int32.Parse(data[1]) < maxHR * 0.6)
+                     
+                         if (Int32.Parse(data[1]) < maxHR * 0.6)
                          {
-                             encourageBrush = new SolidColorBrush(Colors.Orange);
-                             encourageText = "Speed up!";
+                             encouragementBox.Foreground = new SolidColorBrush(Colors.Orange);
+                             encouragementBox.Content = "Speed up!";
                          }
 
                          // Above target zone.
                          else if (Int32.Parse(data[1]) > maxHR * 0.8)
                          {
-                             encourageBrush = new SolidColorBrush(Colors.Cyan);
-                             encourageText = "Slow down!";
+                             encouragementBox.Foreground = new SolidColorBrush(Colors.Cyan);
+                             encouragementBox.Content = "Slow down!";
                          }
 
                          // Within target zone.
                          else
                          {
-                             encourageBrush = new SolidColorBrush(Colors.MediumVioletRed);
-                             encourageText = "Keep it up!";
+                             encouragementBox.Foreground = new SolidColorBrush(Colors.MediumVioletRed);
+                             encouragementBox.Content = "Keep it up!";
                          }
+                        }));
                          
-                        // Make the changes in the UI thread.
-                        this.Dispatcher.Invoke((Action)(() =>
-                        {
-                            encouragementBox.Foreground = encourageBrush;
-                            encouragementBox.Content = encourageText;
+  
 
-                        })); */
                     }
 
                     // Change the Sats display in the UI thread.
@@ -287,14 +289,12 @@ namespace LifeCycle
                             oxygenSatLabel.Content = data[1] + " %";
                         }));
                     }
-
-                    if (fakeBP[0] == "BP")
-                    {
-                        bloodPressure = rnd.Next(70, 190) + "/" + rnd.Next(40, 100);
+                    // Always true
+                    if (fakeData[0] == "BP")
+                    {    
                         this.Dispatcher.Invoke((Action)(() =>
                         {
-
-                           // bloodPressureLabel.Content = bloodPressure;
+                            bloodPressureLabel1.Content = fakeData[1];
                         }));
                     }
 

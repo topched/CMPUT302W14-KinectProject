@@ -36,8 +36,8 @@
                     <Label Content="LifeCycle" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" FontSize="100" FontWeight="Bold" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="118" Width="295"/>
                     <Label x:Name="startWorkoutCountdownLabel" Content=""  Margin="292,7,240.597,179" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="64" FontWeight="Black" Foreground="#FFDE6D0F" Width="419" d:IsHidden="True" Grid.Row="2" Height="95"/>
                     <k:KinectTileButton Content="Done" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="343,109.419,0,0" VerticalAlignment="Top" Width="250" x:Name="closeOptionsButton" Click="closeOptionsButton_Click" Height="150" Background="#FF01A2E8" Foreground="White" Grid.Row="3" Visibility="Hidden"/>
-                    <Label x:Name="heartRateLabel" Content="" HorizontalAlignment="Left" Margin="265,56,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="62" Width="134"/>
-                    <Label x:Name="oxygenSatLabel" Content="" HorizontalAlignment="Left" Margin="75,138,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="49" Width="161" Grid.RowSpan="2"/>
+                    <Label x:Name="heartRateLabel" Content="" HorizontalAlignment="Left" Margin="220,51,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="53" Width="134"/>
+                    <Label x:Name="oxygenSatLabel" Content="" HorizontalAlignment="Left" Margin="75,138,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="54" Width="161" Grid.RowSpan="2"/>
                     <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="23,50,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Background="White" Foreground="#FF01A2E8" Grid.Row="2" Height="88" Width="331"/>
                     <k:KinectScrollViewer x:Name="selectTimeScrollViewer" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Margin="0,30,0,0" VerticalAlignment="Top" Height="195" Width="570" Foreground="#FF01A2E8" Grid.RowSpan="2" Grid.Row="1" Visibility="Hidden">
                         <k:KinectScrollViewer.HoverBackground>
@@ -53,7 +53,7 @@
                     <Label x:Name="satsLabel" Content="Sats:" HorizontalAlignment="Left" Margin="10,143,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="39" Width="60" Grid.RowSpan="2"/>
                     <Label x:Name="encouragementBox" Content="" HorizontalAlignment="Left" Margin="79,0,0,0" Grid.Row="1" VerticalAlignment="Top" Height="110" Width="400" FontSize="72" FontFamily="Microsoft Uighur"/>
                     <Label x:Name="BloodPressure" Content="Blood Pressure: " HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="41" Width="194"/>
-                    <Label x:Name="bloodPressureLabel1" Content="" HorizontalAlignment="Left" Margin="209,15,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="36" Width="134"/>
+                    <Label x:Name="bloodPressureLabel1" Content="" HorizontalAlignment="Left" Margin="188,0,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="56" Width="134"/>
 
 
                 </Grid>
