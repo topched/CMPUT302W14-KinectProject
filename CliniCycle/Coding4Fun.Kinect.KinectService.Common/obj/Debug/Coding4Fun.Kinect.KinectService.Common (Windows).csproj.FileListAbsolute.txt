@@ -1,0 +1,9 @@
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Common\bin\Debug\Windows\Coding4Fun.Kinect.KinectService.Common.dll
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Common\bin\Debug\Windows\Coding4Fun.Kinect.KinectService.Common.pdb
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Common\obj\Debug\Coding4Fun.Kinect.KinectService.Common.dll
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Common\obj\Debug\Coding4Fun.Kinect.KinectService.Common.pdb
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Common\bin\Debug\Windows\Coding4Fun.Kinect.KinectService.Common.dll
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Common\bin\Debug\Windows\Coding4Fun.Kinect.KinectService.Common.pdb
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Common\obj\Debug\Coding4Fun.Kinect.KinectService.Common (Windows).csprojResolveAssemblyReference.cache
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Common\obj\Debug\Coding4Fun.Kinect.KinectService.Common.dll
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Common\obj\Debug\Coding4Fun.Kinect.KinectService.Common.pdb

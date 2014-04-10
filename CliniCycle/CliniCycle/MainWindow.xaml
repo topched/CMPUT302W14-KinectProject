@@ -1,0 +1,83 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:k="http://schemas.microsoft.com/kinect/2013"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	x:Class="CliniCycle.MainWindow"
+	x:Name="Window"
+	Title="MainWindow"
+	Width="1024" Height="768" ResizeMode="CanMinimize">
+    <Grid Margin="0,10,2,0">
+        <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" Name="sensorChooserUi" />
+        <k:KinectRegion Name="kinectRegion">
+            <Grid x:Name="LayoutRoot" OpacityMask="Black" RenderTransformOrigin="0.478,0.52" Margin="0,0,2,0" >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="257*"/>
+                    <ColumnDefinition Width="757*"/>
+                    <ColumnDefinition Width="0*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="19*"/>
+                    <RowDefinition Height="141*"/>
+                </Grid.RowDefinitions>
+                <Border x:Name="borderPatient1" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,15,0,0" Height="120" Width="160" Grid.Row="1">
+                    <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="-4" Width="160" Height="120" MouseEnter="patient1_Click" />
+                </Border>
+                <Border x:Name="borderPatientLarge" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="16,199,0,0" Height="410" Width="558" Grid.Row="1" Grid.ColumnSpan="2">
+                    <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeedLarge"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="-4,-4,-3,-6"/>
+                </Border>
+                <Border x:Name="borderPatient2" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="175,16,0,0" Height="120" Width="160" Grid.Row="1" Grid.ColumnSpan="2">
+                    <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed2"   HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="Fill" Margin="-4" Width="160" Height="120"/>
+                </Border>
+                <Border x:Name="borderPatient3" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="83,16,0,0" Height="120" Width="160" Grid.Row="1" Grid.Column="1">
+                    <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed3"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="-4" Width="160" Height="120"/>
+                </Border>
+                <Border x:Name="borderPatient4" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,16,341,0" Height="120" Width="160" Grid.Row="1" Grid.Column="1">
+                    <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed4"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="0,0,-8,-8" Width="160" Height="120"/>
+                </Border>
+                <TextBlock x:Name="patientIDBlock" HorizontalAlignment="Left" Margin="323,202,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="71" Width="421" FontWeight="Bold" FontSize="64" Background="#FFFEFFFF" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Grid.Row="1" Grid.Column="1"/>
+                <TextBlock x:Name="patientHeartrateBlock" HorizontalAlignment="Left" Margin="327,326,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="420" FontWeight="Bold" FontSize="48" Background="White" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Grid.Row="1" Grid.Column="1"><Run Language="en-ca" Text="Heart rate: --"/></TextBlock>
+                <TextBlock x:Name="patientOxygenSatBlock" HorizontalAlignment="Left" Margin="326,374,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="57" Width="421" FontWeight="Bold" FontSize="48" Background="White" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Grid.Row="1" Grid.Column="1"><Run Language="en-ca" Text="Oxygen Saturation: --"/></TextBlock>
+                <k:KinectTileButton x:Name="buttonPatient2" Content="Button" HorizontalAlignment="Left" Margin="175,16,0,0" VerticalAlignment="Top" Width="160" Height="120" Click="patient2_Click" Background="Black" Opacity="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+                <k:KinectTileButton x:Name="buttonPatient3" HorizontalAlignment="Left" Margin="83,16,0,0" VerticalAlignment="Top" Width="160" Height="120" Click="patient3_Click" Background="Black" Opacity="0" Grid.Row="1" Grid.Column="1"/>
+                <k:KinectTileButton x:Name="buttonPatient4" Content="Button" HorizontalAlignment="Right" Margin="0,16,341,0" VerticalAlignment="Top" Width="160" Height="120" Click="patient4_Click" Background="Black" Opacity="0" Grid.Row="1" Grid.Column="1"/>
+                <Label Content="LifeCycle" HorizontalAlignment="Center" Margin="0,-18,-10,0" VerticalAlignment="Top" Width="1024" Height="116" Background="#FF01A2E8" Foreground="White" FontFamily="Microsoft Uighur" FontSize="100" RenderTransformOrigin="0.49,-0.246" Grid.RowSpan="2" Grid.ColumnSpan="3"/>
+
+                <Border x:Name="borderPatient5" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,16,176,0" Height="120" Width="160" Grid.Row="1" Grid.Column="1">
+                    <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed5"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="-4" Width="160" Height="120"/>
+                </Border>
+                <k:KinectTileButton x:Name="buttonPatient5" Content="Button" HorizontalAlignment="Right" Margin="0,16,176,0" VerticalAlignment="Top" Width="160" Height="120" Click="patient5_Click" Background="Black" Opacity="0" Grid.Row="1" Grid.Column="1"/>
+                <Border x:Name="borderPatient6" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,16,11,0" Height="120" Width="160" Grid.Row="1" Grid.Column="1">
+                    <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed6"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="-4" Width="160" Height="120"/>
+                </Border>
+                <k:KinectTileButton x:Name="buttonPatient6" Content="Button" HorizontalAlignment="Right" Margin="0,16,11,0" VerticalAlignment="Top" Width="160" Height="120" Click="patient6_Click" Background="Black" Opacity="0" Grid.Row="1" Grid.Column="1"/>
+                <k:KinectTileButton x:Name="buttonPatient1" Content="Connect" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top" Width="160" Height="120" Click="patient1_Click" Background="#FF01A2E8" Grid.Row="1" Foreground="White" BorderBrush="{x:Null}"/>
+                <Label x:Name="heartRate1" HorizontalAlignment="Left" Height="39" Margin="10,135,0,0" Grid.Row="1" VerticalAlignment="Top" Width="160" FontSize="14.667" Content="Heart Rate: --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label x:Name="sat1" HorizontalAlignment="Left" Height="44" Margin="10,162,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="160" FontSize="14.667" Content="Oxygen Sat:  --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label x:Name="heartRate4" HorizontalAlignment="Left" Height="39" Margin="256,135,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="160" FontSize="14.667" Grid.Column="1" Content="Heart Rate: --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label x:Name="sat4" HorizontalAlignment="Left" Height="44" Margin="256,162,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="177" FontSize="14.667" Grid.Column="1" Content="Oxygen Sat:  --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label x:Name="heartRate2" HorizontalAlignment="Left" Height="38" Margin="175,136,0,0" Grid.Row="1" VerticalAlignment="Top" Width="160" FontSize="14.667" Content="Heart Rate: --" Grid.ColumnSpan="2" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label  x:Name="sat2" HorizontalAlignment="Left" Height="44" Margin="175,162,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="160" FontSize="14.667" Content="Oxygen Sat:  --" Grid.ColumnSpan="2" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label  x:Name="heartRate3" HorizontalAlignment="Left" Height="38" Margin="83,136,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="160" FontSize="14.667" Grid.Column="1" Content="Heart Rate: --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label  x:Name="sat3" HorizontalAlignment="Left" Height="44" Margin="83,162,0,0" Grid.Row="1" VerticalAlignment="Top" Width="160" FontSize="14.667" Grid.Column="1" Content="Oxygen Sat:  --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label  x:Name="heartRate5" HorizontalAlignment="Left" Height="27" Margin="426,135,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="160" FontSize="14.667" Grid.Column="1" Content="Heart Rate: --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label  x:Name="sat5" HorizontalAlignment="Left" Height="32" Margin="426,162,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="160" FontSize="14.667" Grid.Column="1" Content="Oxygen Sat:  --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label  x:Name="heartRate6" HorizontalAlignment="Left" Height="27" Margin="591,135,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="166" FontSize="14.667" Grid.Column="1" Content="Heart Rate: --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <Label  x:Name="sat6" HorizontalAlignment="Left" Height="32" Margin="591,162,0,0" Grid.Row="1"  VerticalAlignment="Top" Width="166" FontSize="14.667" Grid.Column="1" Content="Oxygen Sat:  --" Background="{x:Null}" Foreground="#FF0063FF"/>
+                <k:KinectTileButton Content="Exit" HorizontalAlignment="Left" LabelBackground="Brown" Margin="635,18,0,0" Width="100" x:Name="exitProgramButton" Click="exitProgramButton_Click" Height="50" Background="White" Foreground="#FF01A2E8" FontSize="48" FontFamily="Microsoft Uighur" VerticalAlignment="Top" Grid.Column="1" />
+                <TextBlock x:Name="patientBloodPressureBlock" HorizontalAlignment="Left" Margin="327,278,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="43" Width="356" FontWeight="Bold" FontSize="48" Background="White" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Grid.Row="1" Text="Blood Pressure:" Grid.Column="1"/>
+                <Image x:Name="HeartBeat" HorizontalAlignment="Left" Height="100" Margin="15,-12,0,0" VerticalAlignment="Top" Width="100" Source="heart_beat.png" Grid.Column="1" Grid.RowSpan="2"/>
+
+
+            </Grid>
+        </k:KinectRegion>
+        <Border x:Name="borderECG" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="582,521,0,0" Height="175" Width="245">
+            <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="ecgFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="-4" Width="245" Height="175" MouseEnter="patient1_Click" />
+        </Border>
+        <Border x:Name="borderClinician" BorderThickness="4" BorderBrush="#FF01A2E8" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="836,576,0,0" Height="120" Width="160">
+            <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="clinicianFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="-4" Width="160" Height="120" MouseEnter="patient1_Click" />
+        </Border>
+    </Grid>
+
+</Window>

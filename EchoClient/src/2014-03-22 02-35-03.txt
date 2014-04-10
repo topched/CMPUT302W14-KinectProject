@@ -1,6 +1,0 @@
-OX 99 02:35:03
-OX 93 20 02:35:03
-No heartrate data was collected.
-OX max: 99
-OX min: 93
-OX avg: 96

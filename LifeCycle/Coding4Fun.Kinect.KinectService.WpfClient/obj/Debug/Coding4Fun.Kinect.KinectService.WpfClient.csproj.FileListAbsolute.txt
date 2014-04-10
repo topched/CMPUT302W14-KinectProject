@@ -1,0 +1,7 @@
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.WpfClient\bin\Debug\Coding4Fun.Kinect.KinectService.WpfClient.dll
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.WpfClient\bin\Debug\Coding4Fun.Kinect.KinectService.WpfClient.pdb
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.WpfClient\bin\Debug\Coding4Fun.Kinect.KinectService.Common.dll
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.WpfClient\bin\Debug\Coding4Fun.Kinect.KinectService.Common.pdb
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.WpfClient\obj\Debug\Coding4Fun.Kinect.KinectService.WpfClient.csprojResolveAssemblyReference.cache
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.WpfClient\obj\Debug\Coding4Fun.Kinect.KinectService.WpfClient.dll
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.WpfClient\obj\Debug\Coding4Fun.Kinect.KinectService.WpfClient.pdb

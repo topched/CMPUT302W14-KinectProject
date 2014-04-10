@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliniCycle", "CliniCycle\CliniCycle.csproj", "{21FC990F-EBC3-4662-A76E-670F817D96E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coding4Fun.Kinect.KinectService.Common (Windows)", "Coding4Fun.Kinect.KinectService.Common\Coding4Fun.Kinect.KinectService.Common (Windows).csproj", "{56EED41B-D5BE-48A4-8F7E-6D1E14A0E50C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coding4Fun.Kinect.KinectService.Listeners", "Coding4Fun.Kinect.KinectService.Listeners\Coding4Fun.Kinect.KinectService.Listeners.csproj", "{ED21CAA6-BDD1-4316-B59E-4BD7F024CAD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Kinect.Toolkit", "Microsoft.Kinect.Toolkit\Microsoft.Kinect.Toolkit.csproj", "{C6F9C31B-6130-4443-A5CC-EF0664552ECD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Kinect.Toolkit.Controls", "Microsoft.Kinect.Toolkit.Controls\Microsoft.Kinect.Toolkit.Controls.csproj", "{4508C4D1-85BB-4F3F-9E3B-CC93D231C65D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coding4Fun.Kinect.KinectService.WpfClient", "Coding4Fun.Kinect.KinectService.WpfClient\Coding4Fun.Kinect.KinectService.WpfClient.csproj", "{CD43BB42-BBCC-4851-9289-44872304DDCF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21FC990F-EBC3-4662-A76E-670F817D96E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21FC990F-EBC3-4662-A76E-670F817D96E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21FC990F-EBC3-4662-A76E-670F817D96E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21FC990F-EBC3-4662-A76E-670F817D96E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56EED41B-D5BE-48A4-8F7E-6D1E14A0E50C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56EED41B-D5BE-48A4-8F7E-6D1E14A0E50C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56EED41B-D5BE-48A4-8F7E-6D1E14A0E50C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56EED41B-D5BE-48A4-8F7E-6D1E14A0E50C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED21CAA6-BDD1-4316-B59E-4BD7F024CAD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED21CAA6-BDD1-4316-B59E-4BD7F024CAD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED21CAA6-BDD1-4316-B59E-4BD7F024CAD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED21CAA6-BDD1-4316-B59E-4BD7F024CAD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6F9C31B-6130-4443-A5CC-EF0664552ECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F9C31B-6130-4443-A5CC-EF0664552ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F9C31B-6130-4443-A5CC-EF0664552ECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F9C31B-6130-4443-A5CC-EF0664552ECD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4508C4D1-85BB-4F3F-9E3B-CC93D231C65D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4508C4D1-85BB-4F3F-9E3B-CC93D231C65D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4508C4D1-85BB-4F3F-9E3B-CC93D231C65D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4508C4D1-85BB-4F3F-9E3B-CC93D231C65D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD43BB42-BBCC-4851-9289-44872304DDCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD43BB42-BBCC-4851-9289-44872304DDCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD43BB42-BBCC-4851-9289-44872304DDCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD43BB42-BBCC-4851-9289-44872304DDCF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

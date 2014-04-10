@@ -1,0 +1,14 @@
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Listeners.dll
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Listeners.pdb
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Common.dll
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Common.pdb
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.csprojResolveAssemblyReference.cache
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.dll
+G:\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.pdb
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Listeners.dll
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Listeners.pdb
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Common.dll
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Common.pdb
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.csprojResolveAssemblyReference.cache
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.dll
+C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.pdb

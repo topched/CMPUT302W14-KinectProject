@@ -1,0 +1,72 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:k="http://schemas.microsoft.com/kinect/2013"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="LifeCycle.MainWindow"
+        Title="MainWindow" Height="768" Width="1024" Background="#FFF7F1F1" ResizeMode="CanMinimize">
+
+
+    <Grid Margin="0,10,2,0">
+        <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi" />
+        <k:KinectRegion x:Name="kinectRegion" Margin="0,-9,0,39" Background="#FF746E6E">
+
+            <Grid Margin="53,10,10,-10">
+                <Grid HorizontalAlignment="Left" Width="340" Margin="-52,-10,0,-28" Background="#FF01A2E8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="950*"/>
+                        <RowDefinition Height="223*"/>
+                    </Grid.RowDefinitions>
+                    <Border BorderThickness="4" BorderBrush="White" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,10" Height="240" Width="320">
+                        <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectPatientFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="320" Height="240" Margin="-4" OpacityMask="Black"/>
+                    </Border>
+                    <Border BorderThickness="4" BorderBrush="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,10,0,10" Height="240" Width="320" Grid.RowSpan="2">
+                        <Image k:KinectRegion.KinectRegion="{Binding ElementName=kinectRegion}" x:Name="kinectClinicianFeed"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Width="320" Height="240" Margin="-4"/>
+                    </Border>
+                    <k:KinectTileButton Content="Options" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="45,294,0,0" VerticalAlignment="Top" Width="250" x:Name="showOptionsButton" Click="showOptionsButton_Click" Height="150" Background="White" Foreground="#FF01A2E8" FontSize="48" FontFamily="Microsoft Uighur"/>
+                </Grid>
+                <Grid HorizontalAlignment="Left" Height="737" VerticalAlignment="Top" Width="672" Margin="290,-9,-9,-29" Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="278*"/>
+                        <RowDefinition Height="176*"/>
+                        <RowDefinition Height="281*"/>
+                        <RowDefinition Height="438*"/>
+                    </Grid.RowDefinitions>
+                    <k:KinectTileButton Content="Begin Workout" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="10,114,0,0" VerticalAlignment="Top" Width="250" x:Name="beginWorkoutButton" Click="beginWorkoutButton_Click" Height="150" Background="#FF01A2E8" Foreground="White" Grid.Row="3" FontSize="48" FontFamily="Microsoft Uighur" />
+                    <k:KinectTileButton Content="Exit" HorizontalAlignment="Left" LabelBackground="Brown" Margin="561,0,0,0" Width="100" x:Name="exitProgramButton" Click="exitProgramButton_Click" Height="100" Background="#FF01A2E8" Foreground="White" FontSize="48" FontFamily="Microsoft Uighur" VerticalAlignment="Top" />
+                    <Label Content="LifeCycle" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" FontSize="100" FontWeight="Bold" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="118" Width="295"/>
+                    <Label x:Name="startWorkoutCountdownLabel" Content=""  Margin="292,7,240.597,179" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="64" FontWeight="Black" Foreground="#FFDE6D0F" Width="419" d:IsHidden="True" Grid.Row="2" Height="95"/>
+                    <k:KinectTileButton Content="Done" LabelBackground="#91908A" HorizontalAlignment="Left" Margin="343,109.419,0,0" VerticalAlignment="Top" Width="250" x:Name="closeOptionsButton" Click="closeOptionsButton_Click" Height="150" Background="#FF01A2E8" Foreground="White" Grid.Row="3" Visibility="Hidden"/>
+                    <Label x:Name="heartRateLabel" Content="" HorizontalAlignment="Left" Margin="265,56,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="62" Width="134"/>
+                    <Label x:Name="oxygenSatLabel" Content="" HorizontalAlignment="Left" Margin="75,138,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="49" Width="161" Grid.RowSpan="2"/>
+                    <Label x:Name="timerLabel" Content="timerLabel" HorizontalAlignment="Left" Margin="27,50,0,0" VerticalAlignment="Top" FontSize="64" FontWeight="Bold" Background="White" Foreground="#FF01A2E8" Grid.Row="2" Height="88" Width="331" FontFamily="Microsoft Uighur"/>
+                    <k:KinectScrollViewer x:Name="selectTimeScrollViewer" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Margin="0,30,0,0" VerticalAlignment="Top" Height="195" Width="570" Foreground="#FF01A2E8" Grid.RowSpan="2" Grid.Row="1" Visibility="Hidden">
+                        <k:KinectScrollViewer.HoverBackground>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Transparent" Offset="0"/>
+                                <GradientStop Color="Transparent" Offset="1"/>
+                            </LinearGradientBrush>
+                        </k:KinectScrollViewer.HoverBackground>
+                        <StackPanel Orientation="Horizontal" x:Name="workoutTimeScrollContent" />
+                    </k:KinectScrollViewer>
+                    <Label x:Name="optionsTimeLabel" Content="Select workout length in minutes:" HorizontalAlignment="Left" Margin="94,203,0,0" VerticalAlignment="Top" Height="55" Width="484" FontSize="32" Foreground="#FF01A2E8" Visibility="Hidden"/>
+                    <Label x:Name="heartRateLabel_Copy" Content="Heart Rate (BPM):" HorizontalAlignment="Left" Margin="10,56,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="62" Width="226"/>
+                    <Label x:Name="satsLabel" Content="Sats:" HorizontalAlignment="Left" Margin="10,143,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="39" Width="60" Grid.RowSpan="2"/>
+                    <Label x:Name="encouragementBox" Content="" HorizontalAlignment="Left" Margin="79,0,0,0" Grid.Row="1" VerticalAlignment="Top" Height="110" Width="400" FontSize="72" FontFamily="Microsoft Uighur"/>
+                    <Label x:Name="BloodPressure" Content="Blood Pressure: " HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="36" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="41" Width="194"/>
+                    <Label x:Name="bloodPressureLabel1" Content="" HorizontalAlignment="Left" Margin="209,15,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="36" Width="134"/>
+                    <k:KinectTileButton x:Name="connectToButton" Content="Connect" HorizontalAlignment="Left" Margin="412,114,0,0" VerticalAlignment="Top" Height="150" Width="250" Click="connectToButton_Click" Background="#FF01A2E8" Foreground="White" Grid.Row="3" FontFamily="Microsoft Uighur" FontSize="48"/>
+                    <Image x:Name="HeartBeat" HorizontalAlignment="Left" Height="100" Margin="310,10,0,0" VerticalAlignment="Top" Width="100" Source="heart_beat.png"/>
+
+
+                </Grid>
+
+
+
+            </Grid>
+
+
+        </k:KinectRegion>
+
+    </Grid>
+
+</Window>

@@ -1,0 +1,14 @@
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Listeners.dll
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Listeners.pdb
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Common.dll
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Common.pdb
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.csprojResolveAssemblyReference.cache
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.dll
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.pdb
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Listeners.dll
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Listeners.pdb
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Common.dll
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\bin\Debug\Coding4Fun.Kinect.KinectService.Common.pdb
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.csprojResolveAssemblyReference.cache
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.dll
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Listeners\obj\Debug\Coding4Fun.Kinect.KinectService.Listeners.pdb

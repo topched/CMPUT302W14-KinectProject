@@ -1,0 +1,8 @@
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Common\bin\Debug\Windows\Coding4Fun.Kinect.KinectService.Common.dll
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Common\bin\Debug\Windows\Coding4Fun.Kinect.KinectService.Common.pdb
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Common\obj\Debug\Coding4Fun.Kinect.KinectService.Common.dll
+C:\Users\user\Desktop\Server\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Common\obj\Debug\Coding4Fun.Kinect.KinectService.Common.pdb
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Common\bin\Debug\Windows\Coding4Fun.Kinect.KinectService.Common.dll
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Common\bin\Debug\Windows\Coding4Fun.Kinect.KinectService.Common.pdb
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Common\obj\Debug\Coding4Fun.Kinect.KinectService.Common.dll
+E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Coding4Fun.Kinect.KinectService.Common\obj\Debug\Coding4Fun.Kinect.KinectService.Common.pdb

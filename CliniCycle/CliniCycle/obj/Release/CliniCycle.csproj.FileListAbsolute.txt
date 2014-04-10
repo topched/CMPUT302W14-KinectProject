@@ -1,0 +1,15 @@
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\bin\Release\CliniCycle.exe.config
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\bin\Release\CliniCycle.exe
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\bin\Release\CliniCycle.pdb
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\bin\Release\Microsoft.Kinect.Toolkit.Controls.dll
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\bin\Release\Microsoft.Kinect.Toolkit.dll
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\bin\Release\Microsoft.Kinect.Toolkit.Interaction.dll
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\obj\Release\MainWindow.baml
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\obj\Release\MainWindow.g.cs
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\obj\Release\App.g.cs
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\obj\Release\CliniCycle_MarkupCompile.cache
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\obj\Release\CliniCycle.g.resources
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\obj\Release\CliniCycle.Properties.Resources.resources
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\obj\Release\CliniCycle.csproj.GenerateResource.Cache
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\obj\Release\CliniCycle.exe
+C:\Users\user\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\CliniCycle\obj\Release\CliniCycle.pdb
