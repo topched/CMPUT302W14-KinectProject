@@ -25,6 +25,8 @@ using System.Net.Sockets;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using NAudio.Wave;
+using NAudio;
 
 namespace CliniCycle
 {
@@ -33,8 +35,13 @@ namespace CliniCycle
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Variable declarations
         int patientNum = 0;
 
+        // Audio 
+        WaveOut wo = new WaveOut();
+        WaveFormat wf = new WaveFormat(16000, 1);
+        BufferedWaveProvider mybufferwp = null;
        
         //ColorImageFormat imageFormat = ColorImageFormat.RgbResolution640x480Fps30;
 
@@ -50,7 +57,6 @@ namespace CliniCycle
 
         //for sockets
         private byte[] pixels = new byte[0];
-
 
         private AsyncCallback socketBioWorkerCallback;
         public Socket socketBioListener;
@@ -73,6 +79,8 @@ namespace CliniCycle
 
         //kinect clients
         private ColorClient _videoClient;
+        private AudioClient _audioClient;
+        #endregion
 
         public MainWindow()
         {
@@ -83,10 +91,13 @@ namespace CliniCycle
 
             //setup the kinect server
             InitializeKinect();
+            //InitializeAudio();
                        
         }
 
 
+
+        #region Kinect
         private void InitializeKinect()
         {
             this.sensorChooser = new KinectSensorChooser();
@@ -99,7 +110,7 @@ namespace CliniCycle
             var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
             BindingOperations.SetBinding(this.kinectRegion, KinectRegion.KinectSensorProperty, regionSensorBinding);
 
-            //// receiving video from patient
+            //// Receiving video from patient.
             _videoClient = new ColorClient();
             _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
             _videoClient.Connect("192.168.184.19", 4555);
@@ -108,9 +119,20 @@ namespace CliniCycle
             _videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
             _videoListener.Start();
 
-
-
+            // Recieving audio from patient.
+            _audioClient = new AudioClient();
+            _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+            _audioClient.Connect("192.168.184.19", 4533);
         }
+
+        private void InitializeAudio()
+        {
+            mybufferwp = new BufferedWaveProvider(wf);
+            mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
+            wo.Init(mybufferwp);
+            wo.Play();
+        }
+
         /// <summary>
         /// Called when the KinectSensorChooser gets a new sensor
         /// </summary>
@@ -208,6 +230,16 @@ namespace CliniCycle
             buttonPatient1.Visibility = Visibility.Hidden;
         }
 
+        void _audioClient_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
+        {
+            if (mybufferwp != null)
+            {
+                mybufferwp.AddSamples(e.AudioFrame.AudioData, 0, e.AudioFrame.AudioData.Length);
+            }
+        }
+        #endregion
+
+        #region Biodata
         /// <summary>
         /// Sets the connection for biometrics.
         /// </summary>
@@ -218,14 +250,15 @@ namespace CliniCycle
             public byte[] dataBuffer = new byte[666];
         }
 
+
         private void InitializeBioSockets()
         {
             try
             {
                 //create listening socket
                 socketBioListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
-                IPEndPoint iplocal = new IPEndPoint(addy, 4443);
+                IPAddress addy = System.Net.IPAddress.Parse("192.168.184.19");
+                IPEndPoint iplocal = new IPEndPoint(addy, 4449);
                 //bind to local IP Address
                 socketBioListener.Bind(iplocal);
                 //start listening -- 4 is max connections queue, can be changed
@@ -435,7 +468,9 @@ namespace CliniCycle
             }
 
         }
+        #endregion
 
+        #region Buttons
         private void patient1_Click(object sender, RoutedEventArgs e)
         {
             patientIDBlock.Text = p1;
@@ -449,6 +484,11 @@ namespace CliniCycle
                 _videoClient.Connect("192.168.184.19", 4555);
             }
 
+            if (!_audioClient.IsConnected)
+            {
+                _audioClient.Connect("192.168.184.19", 4533);
+            }
+            
         }
 
         private void patient2_Click(object sender, RoutedEventArgs e)
@@ -457,6 +497,7 @@ namespace CliniCycle
             patientIDBlock.Text = p2;
             patientHeartrateBlock.Text = heartRate2.Content.ToString();
             patientOxygenSatBlock.Text = sat2.Content.ToString();
+            InitializeAudio();
         }
 
         private void patient3_Click(object sender, RoutedEventArgs e)
@@ -521,6 +562,14 @@ namespace CliniCycle
                     if (bioSocketWorker != null)
                         bioSocketWorker.Close();
 
+                    // Stop playing audio and dispose of the player.
+                    if (wo.PlaybackState == PlaybackState.Playing)
+                    {
+                        wo.Stop();
+                        wo.Dispose();
+                        wo = null;
+                    }
+
                     // Close the program.
                     this.Close();
                     break;
@@ -530,7 +579,7 @@ namespace CliniCycle
                     break;
             }
         }
-
+        #endregion
 
 
 

@@ -49,12 +49,12 @@ namespace LifeCycle
         public Socket socketToClinician;
         public Socket socketClient;
 
-        public string filePathHR = @"..\..\HR.txt";
+        /*public string filePathHR = @"..\..\HR.txt";
         public string filePathOX = @"..\..\OX.txt";
         public string heartLine;
         public string oxygenLine;
         public StreamReader heartRateFile = null;
-        public StreamReader oxygenSatFile = null;
+        public StreamReader oxygenSatFile = null;*/
         
         public int secondsLeft = 2;
         public int minutesLeft = 30;
@@ -100,16 +100,6 @@ namespace LifeCycle
 
             //start the kinect
             InitializeKinect();
-
-            //used for the medical devices       
-            serverProcess.StartInfo.UseShellExecute = false;
-            serverProcess.StartInfo.RedirectStandardOutput = false;
-            serverProcess.StartInfo.RedirectStandardError = false;
-            serverProcess.StartInfo.CreateNoWindow = true;
-            serverProcess.StartInfo.FileName = "java";
-
-            serverProcess.StartInfo.Arguments = @"~\ChatServer";
-            //serverProcess.Start();
             
             //updateDisplays();
             minutesLeft = (secondsLeft) / 60;
