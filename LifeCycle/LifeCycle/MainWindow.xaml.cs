@@ -42,20 +42,15 @@ namespace LifeCycle
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        #region Variable Construction
+        // For video.
         private WriteableBitmap outputImage;
         private byte[] pixels = new byte[0];
 
         public Socket socketToClinician;
         public Socket socketClient;
-
-        public string filePathHR = @"..\..\HR.txt";
-        public string filePathOX = @"..\..\OX.txt";
-        public string heartLine;
-        public string oxygenLine;
-        public StreamReader heartRateFile = null;
-        public StreamReader oxygenSatFile = null;
         
+        // For Timer.
         public int secondsLeft = 2;
         public int minutesLeft = 30;
         public int heartRate = 135;
@@ -68,40 +63,42 @@ namespace LifeCycle
         public bool workoutInProgress = false;
         public Process serverProcess = new Process();
 
-        //for the websockets
+        // For the websockets.
         private List<IWebSocketConnection> sockets;
 
+        // For Biodata socket.
         private AsyncCallback socketBioWorkerCallback;
         public Socket socketBioListener;
         public Socket bioSocketWorker;
+        public Socket socketAudioListener;
 
-        //kinect sensor 
+        // kinect sensor.
         private KinectSensorChooser sensorChooser;
 
-        //kinect listeners
+        // kinect listeners.
         private static DepthListener _depthListener;
         private static ColorListener _videoListener;
         private static SkeletonListener _skeletonListener;
         private static AudioListener _audioListener;
 
-        //kinect clients
+        // kinect clients
         private ColorClient _videoClient;
         private AudioClient _audioClient;
         private SkeletonClient _skeletonClient;
         private DepthClient _depthClient;
-        
+        #endregion
 
         public MainWindow()
         {
             InitializeComponent();
 
-            //used to start socket server for bioSockets
+            //used to start socket server for bioSockets.
             InitializeBioSockets();
 
-            //start the kinect
+            // Start the kinect.
             InitializeKinect();
 
-            //used for the medical devices       
+            #region Medical Devices (unused?)
             serverProcess.StartInfo.UseShellExecute = false;
             serverProcess.StartInfo.RedirectStandardOutput = false;
             serverProcess.StartInfo.RedirectStandardError = false;
@@ -110,15 +107,17 @@ namespace LifeCycle
 
             serverProcess.StartInfo.Arguments = @"~\ChatServer";
             //serverProcess.Start();
+            #endregion
             
-            //updateDisplays();
+            // Set the workout time and displays.
             minutesLeft = (secondsLeft) / 60;
             timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
             
             // Set up timer ticks.
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1); // 1 second
-            
+
+            #region Workout Time
             //fill the time buttons for the workout time selection
             SolidColorBrush brush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF01A2E8"));
             for (int i = 1; i < 7; i++)
@@ -133,10 +132,85 @@ namespace LifeCycle
                 timeSelectionButton.Click += timeSelectionButton_Click;
                 workoutTimeScrollContent.Children.Add(timeSelectionButton);
             }
-
-
+            #endregion
         }
 
+        #region Audio variables
+        private WaveLib.WaveOutPlayer m_Player;
+        private WaveLib.WaveInRecorder m_Recorder;
+        private WaveLib.FifoStream m_Fifo = new WaveLib.FifoStream();
+
+        private byte[] m_PlayBuffer;
+        private byte[] m_RecBuffer;
+        #endregion
+
+        #region Sound Capture
+        private void Start()
+        {
+            Stop();
+            try
+            {
+                WaveLib.WaveFormat fmt = new WaveLib.WaveFormat(44100, 16, 2);
+                m_Player = new WaveLib.WaveOutPlayer(-1, fmt, 16384, 3,
+                                new WaveLib.BufferFillEventHandler(Filler));
+
+                m_Recorder = new WaveLib.WaveInRecorder(-1, fmt, 16384, 3,
+                                new WaveLib.BufferDoneEventHandler(DataArrived));
+            }
+            catch
+            {
+                Stop();
+                throw;
+            }
+        }
+
+        private void DataArrived(IntPtr data, int size)
+        {
+            if (m_RecBuffer == null || m_RecBuffer.Length < size)
+                m_RecBuffer = new byte[size];
+            System.Runtime.InteropServices.Marshal.Copy(data, m_RecBuffer, 0, size);
+            m_Fifo.Write(m_RecBuffer, 0, m_RecBuffer.Length);
+        }
+
+        private void Filler(IntPtr data, int size)
+        {
+            if (m_PlayBuffer == null || m_PlayBuffer.Length < size)
+                m_PlayBuffer = new byte[size];
+            if (m_Fifo.Length >= size){
+                m_Fifo.Read(m_PlayBuffer, 0, size);
+            }
+            else
+                for (int i = 0; i < m_PlayBuffer.Length; i++)
+                    m_PlayBuffer[i] = 0;
+            System.Runtime.InteropServices.Marshal.Copy(m_PlayBuffer,
+                                                         0, data, size);
+        }
+
+        private void Stop()
+        {
+            if (m_Player != null)
+                try
+                {
+                    m_Player.Dispose();
+                }
+                finally
+                {
+                    m_Player = null;
+                }
+            if (m_Recorder != null)
+                try
+                {
+                    m_Recorder.Dispose();
+                }
+                finally
+                {
+                    m_Recorder = null;
+                }
+            m_Fifo.Flush(); // clear all pending data
+        }
+        #endregion
+
+        #region Kinect
         private void InitializeKinect()
         {
             this.sensorChooser = new KinectSensorChooser();
@@ -165,7 +239,7 @@ namespace LifeCycle
             //trying to get the audio from the client -- this can fail
             _audioClient = new AudioClient();
             _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-            _audioClient.Connect("192.168.184.9", 4533);
+            _audioClient.Connect("127.0.0.1", 4533);
 
             //for sending audio
             _audioListener = new AudioListener(this.sensorChooser.Kinect, 4533);
@@ -279,13 +353,17 @@ namespace LifeCycle
             connectToButton.Visibility = Visibility.Hidden;
                      
         }
+        #endregion
 
+        #region Audio
         void _audioClient_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
         {
-            //need to handle the audio here
+            //int size = e.AudioFrame.AudioData.Length;
+           // m_Fifo.Read(e.AudioFrame.AudioData, 0, size);
         }
+        #endregion
 
-
+        #region Biodata
         /// <summary>
         /// Sets the connection for biometrics.
         /// </summary>
@@ -469,12 +547,9 @@ namespace LifeCycle
             }
 
         }
+        #endregion   
 
-        /// ------- END BIO SOCKETS ------- ///
-      
-
-      
-
+        #region Timer
         /// <summary>
         /// Updates displays every second and handles ending the workout if time is up.
         /// </summary>
@@ -515,10 +590,9 @@ namespace LifeCycle
             minutesLeft = (secondsLeft) / 60;
             timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
         }
+        #endregion
 
-        /*      All Button Clicks Below                */
-
-
+        #region Buttons
         private void beginWorkoutButton_Click(object sender, RoutedEventArgs e)
         {
             if (workoutInProgress == false)
@@ -627,6 +701,20 @@ namespace LifeCycle
             _videoClient.Connect("192.168.184.9", 4531);
         }
 
-       
+        private void startButton_Click(object sender, RoutedEventArgs e)
+        {
+            Start();
+
+            startButton.IsEnabled = false;
+            stopButton.IsEnabled = true;
+        }
+
+        private void stopButton_Click(object sender, RoutedEventArgs e)
+        {
+            startButton.IsEnabled = true;
+            stopButton.IsEnabled = false;
+            Stop();
+        }
+        #endregion
     }
 }

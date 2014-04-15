@@ -86,7 +86,7 @@ namespace CliniCycle
                        
         }
 
-
+        #region Kinect
         private void InitializeKinect()
         {
             this.sensorChooser = new KinectSensorChooser();
@@ -207,7 +207,9 @@ namespace CliniCycle
             this.kinectPatientFeed.Source = e.ColorFrame.BitmapImage;
             buttonPatient1.Visibility = Visibility.Hidden;
         }
+        #endregion
 
+        #region Biodata
         /// <summary>
         /// Sets the connection for biometrics.
         /// </summary>
@@ -240,6 +242,7 @@ namespace CliniCycle
             }
 
         }
+
         private void OnBioSocketConnection(IAsyncResult asyn)
         {
             try
@@ -435,7 +438,9 @@ namespace CliniCycle
             }
 
         }
+#endregion
 
+        #region Buttons
         private void patient1_Click(object sender, RoutedEventArgs e)
         {
             patientIDBlock.Text = p1;
@@ -531,10 +536,7 @@ namespace CliniCycle
             }
         }
 
-
-
-
-
+        #endregion
 
     }
 }

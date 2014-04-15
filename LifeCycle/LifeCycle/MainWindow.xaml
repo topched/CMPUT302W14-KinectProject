@@ -56,6 +56,8 @@
                     <Label x:Name="bloodPressureLabel1" Content="" HorizontalAlignment="Left" Margin="209,15,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold" FontSize="48" Foreground="#FF01A2E8" FontFamily="Microsoft Uighur" Height="36" Width="134"/>
                     <k:KinectTileButton x:Name="connectToButton" Content="Connect" HorizontalAlignment="Left" Margin="412,114,0,0" VerticalAlignment="Top" Height="150" Width="250" Click="connectToButton_Click" Background="#FF01A2E8" Foreground="White" Grid.Row="3" FontFamily="Microsoft Uighur" FontSize="48"/>
                     <Image x:Name="HeartBeat" HorizontalAlignment="Left" Height="100" Margin="310,10,0,0" VerticalAlignment="Top" Width="100" Source="heart_beat.png"/>
+                    <k:KinectTileButton Content="Talk" HorizontalAlignment="Left" LabelBackground="Brown" Margin="403,50,0,0" Width="100" x:Name="startButton" Height="100" Background="#FF01A2E8" Foreground="White" FontSize="48" FontFamily="Microsoft Uighur" VerticalAlignment="Top" Grid.Row="2" Click="startButton_Click" />
+                    <k:KinectTileButton Content="Stop" HorizontalAlignment="Left" LabelBackground="Brown" Margin="517,50,0,0" Width="100" x:Name="stopButton" Height="100" Background="#FF01A2E8" Foreground="White" FontSize="48" FontFamily="Microsoft Uighur" VerticalAlignment="Top" Grid.Row="2" Click="stopButton_Click" />
 
 
                 </Grid>
