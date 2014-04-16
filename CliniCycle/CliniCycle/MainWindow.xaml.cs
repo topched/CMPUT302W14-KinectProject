@@ -27,21 +27,29 @@ using System.Net;
 using System.Text.RegularExpressions;
 using NAudio.Wave;
 using NAudio;
+
+using Microsoft.Research.DynamicDataDisplay;
+using Microsoft.Research.DynamicDataDisplay.DataSources;
+using System.Threading;
+using DynamicDataDisplaySample.ECGViewModel;
+using System.ComponentModel;
+using System.Windows.Threading;
+
 #endregion
 namespace CliniCycle
 {
     /// <summary>
     /// Interaction logic for ClinicianWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         #region Variable declarations
         int patientNum = 0;
 
         // Audio 
-        WaveOut wo = new WaveOut();
+        /*WaveOut wo = new WaveOut();
         WaveFormat wf = new WaveFormat(16000, 1);
-        BufferedWaveProvider mybufferwp = null;
+        BufferedWaveProvider mybufferwp = null;*/
        
         //ColorImageFormat imageFormat = ColorImageFormat.RgbResolution640x480Fps30;
 
@@ -77,6 +85,26 @@ namespace CliniCycle
         //kinect clients
         private ColorClient _videoClient;
         private AudioClient _audioClient;
+
+        private Random _Random;
+        private int _maxECG;
+        public int MaxECG
+        {
+            get { return _maxECG; }
+            set { _maxECG = value; this.OnPropertyChanged("MaxECG"); }
+        }
+
+        private int _minECG;
+        public int MinECG
+        {
+            get { return _minECG; }
+            set { _minECG = value; this.OnPropertyChanged("MinECG"); }
+        }
+
+        public ECGPointCollection ecgPointCollection;
+        DispatcherTimer updateCollectionTimer;
+        private int i = 0;
+
         #endregion
 
         public MainWindow()
@@ -84,12 +112,15 @@ namespace CliniCycle
             this.InitializeComponent();
             //Loaded += OnLoaded;
 
-            InitializeBioSockets();
+           // InitializeBioSockets();
 
             //setup the kinect server
             InitializeKinect();
             //InitializeAudio();
-                       
+
+            InitializeECG();
+            
+            this.DataContext = this;                
         }
 
         #region Kinect
@@ -124,13 +155,13 @@ namespace CliniCycle
             }
         }
 
-        private void InitializeAudio()
+       /* private void InitializeAudio()
         {
             mybufferwp = new BufferedWaveProvider(wf);
             mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
             wo.Init(mybufferwp);
             wo.Play();
-        }
+        }*/
 
         /// <summary>
         /// Called when the KinectSensorChooser gets a new sensor
@@ -227,13 +258,13 @@ namespace CliniCycle
             buttonPatient1.Visibility = Visibility.Hidden;
         }
 
-       void _audioClient_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
+       /*void _audioClient_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
         {
             if (mybufferwp != null)
             {
                 mybufferwp.AddSamples(e.AudioFrame.AudioData, 0, e.AudioFrame.AudioData.Length);
             }
-        }
+        }*/
         #endregion
 
         #region Biodata
@@ -581,6 +612,42 @@ namespace CliniCycle
         #endregion
 
 
+
+        public void InitializeECG()
+        {
+            ecgPointCollection = new ECGPointCollection();
+
+            updateCollectionTimer = new DispatcherTimer();
+            updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(100);
+            updateCollectionTimer.Tick += new EventHandler(updateCollectionTimer_Tick);
+            updateCollectionTimer.Start();
+
+            var ds = new EnumerableDataSource<ECGPoint>(ecgPointCollection);
+            ds.SetXMapping(x => dateAxis.ConvertToDouble(x.Date));
+            ds.SetYMapping(y => y.ECG);
+            plotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG"); 
+            plotter.VerticalAxis.Remove();
+            MaxECG = 1;
+            MinECG = -1;
+        }
+
+        void updateCollectionTimer_Tick(object sender, EventArgs e)
+        {
+            i++;
+            _Random = new Random();
+            ecgPointCollection.Add(new ECGPoint(_Random.NextDouble(), DateTime.Now));
+        }
+
+        #region INotifyPropertyChanged members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                this.PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
 
 
 
