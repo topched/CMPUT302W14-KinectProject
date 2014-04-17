@@ -90,6 +90,8 @@ namespace LifeCycle
         public int hrcount, oxcount;
         static string fname = string.Format("Tiny Tim-{0:yyyy-MM-dd hh.mm.ss.tt}.txt", DateTime.Now);
         //*
+
+        public Process process = new Process();
         #endregion
 
         public MainWindow()
@@ -98,10 +100,18 @@ namespace LifeCycle
 
             //used to start socket server for bioSockets
             InitializeBioSockets();
+            CreateSocketConnection();
 
             //start the kinect
             InitializeKinect();
-            
+
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.FileName = "java";
+            serverProcess.StartInfo.Arguments = @"~\ChatServer";
+
             //updateDisplays();
             minutesLeft = (secondsLeft) / 60;
             timerLabel.Content = minutesLeft + "m " + (secondsLeft - (minutesLeft * 60)) + "s";
@@ -145,16 +155,16 @@ namespace LifeCycle
                 var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
                 BindingOperations.SetBinding(this.kinectRegion, KinectRegion.KinectSensorProperty, regionSensorBinding);
 
-                //trying to get the video from the client -- this can fail
+                //trying to get the video from the clinician -- this can fail
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.9", 4531);
+                _videoClient.Connect("192.168.184.19", 4531);
 
                 // Don't show the connect button if you're already connected.
                 if (_videoClient.IsConnected)
                     connectToButton.Visibility = Visibility.Hidden;
 
-                // Sending video to Clinician
+                // Streaming video out on port 4555
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555, ImageFormat.Jpeg);
                 _videoListener.Start();
 
@@ -310,14 +320,17 @@ namespace LifeCycle
             {
                 //create listening socket
                 socketBioListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPAddress addy = System.Net.IPAddress.Parse("192.168.184.19");
-                IPEndPoint iplocal = new IPEndPoint(addy, 4449);
+                //IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
+                //IPEndPoint iplocal = new IPEndPoint(addy, 4444);
+                IPAddress addy = System.Net.IPAddress.Parse("142.244.152.197");
+                IPEndPoint iplocal = new IPEndPoint(addy, 4444);
                 //bind to local IP Address
                 socketBioListener.Bind(iplocal);
                 //start listening -- 4 is max connections queue, can be changed
                 socketBioListener.Listen(4);
                 //create call back for client connections -- aka maybe recieve video here????
                 socketBioListener.BeginAccept(new AsyncCallback(OnBioSocketConnection), null);
+                
             }
             catch (SocketException e)
             {
@@ -328,6 +341,9 @@ namespace LifeCycle
         }
         private void OnBioSocketConnection(IAsyncResult asyn)
         {
+            //if (!socketBioListener.Connected == true)
+            //MessageBox.Show("got Connection");
+            
             //BT creates file
             using (StreamWriter sw = new StreamWriter(File.Create(fname)))
             {
@@ -365,6 +381,25 @@ namespace LifeCycle
                 //start listening for data
                 soc.BeginReceive(sockpkt.dataBuffer, 0, sockpkt.dataBuffer.Length, SocketFlags.None, socketBioWorkerCallback, sockpkt);
             }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private void CreateSocketConnection()
+        {
+            try
+            {
+                //create a new client socket
+                socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                
+                //
+                System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse("192.168.184.19");
+                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000);
+                socketToClinician.Connect(remoteEndPoint);
+            }
+
             catch (SocketException e)
             {
                 MessageBox.Show(e.Message);
@@ -427,7 +462,7 @@ namespace LifeCycle
 
             string value;
             //Creates Request
-            string url = "http://google.ca";
+            string url = "http://142.244.152.166:8000/kinect/data";
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url); // add IP
             ASCIIEncoding encoding = new ASCIIEncoding();
             int bp = 0;
@@ -493,8 +528,8 @@ namespace LifeCycle
 
                     byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
-                    //socketToClinician.Send(dataToClinician);
-                    // MessageBox.Show("Got stuff!");
+                    socketToClinician.Send(dataToClinician);
+                    //MessageBox.Show("Got stuff!");
 
                     // Decide on what encouragement text should be displayed based on heart rate.
                     if (data[0] == "HR")
@@ -716,7 +751,7 @@ namespace LifeCycle
         private void exitProgramButton_Click(object sender, RoutedEventArgs e)
         {
             //BT calls the process/send method
-            processData(hrdata, hrcount, oxdata, oxcount);
+            //processData(hrdata, hrcount, oxdata, oxcount);
             //*
                     
             if (_videoListener != null)
@@ -753,7 +788,7 @@ namespace LifeCycle
             // Begin receiving video stream
             if (sensorChooser.Kinect != null)
             {
-                _videoClient.Connect("192.168.184.9", 4531);
+                _videoClient.Connect("192.168.184.19", 4531);
             }
 
         }

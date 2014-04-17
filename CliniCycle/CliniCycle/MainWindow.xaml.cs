@@ -611,8 +611,7 @@ namespace CliniCycle
         }
         #endregion
 
-
-
+        #region ECG
         public void InitializeECG()
         {
             ecgPointCollection = new ECGPointCollection();
@@ -638,7 +637,6 @@ namespace CliniCycle
             ecgPointCollection.Add(new ECGPoint(_Random.NextDouble(), DateTime.Now));
         }
 
-        #region INotifyPropertyChanged members
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
@@ -646,7 +644,6 @@ namespace CliniCycle
             if (PropertyChanged != null)
                 this.PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
-
         #endregion
 
 

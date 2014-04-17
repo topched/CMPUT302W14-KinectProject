@@ -4,7 +4,7 @@
 library
 C#
 .cs
-E:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit\obj\Debug\
+C:\Users\HCI2014\Documents\GitHub\CMPUT302W14-KinectProject\LifeCycle\Microsoft.Kinect.Toolkit\obj\Debug\
 Microsoft.Kinect.Toolkit
 none
 false
@@ -12,8 +12,8 @@ CODE_ANALYSIS;DEBUG;TRACE
 
 1-1341555513
 
-12-2008820764
-9391674868
+12-661529045
+91065153925
 KinectSensorChooserUI.xaml;
 
 False

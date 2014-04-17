@@ -1,0 +1,2 @@
+No heartrate data was collected.
+No O2Sat data was collected.

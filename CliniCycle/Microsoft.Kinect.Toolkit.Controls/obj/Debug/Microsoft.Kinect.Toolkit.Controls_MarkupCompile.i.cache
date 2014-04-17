@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\HCI2014\Desktop\CMPUT302W14-KinectProject\CliniCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\
+C:\Users\HCI2014\Documents\GitHub\CMPUT302W14-KinectProject\CliniCycle\Microsoft.Kinect.Toolkit.Controls\obj\Debug\
 Microsoft.Kinect.Toolkit.Controls
 none
 false
@@ -16,5 +16,5 @@ DEBUG;TRACE
 15-1763710634
 Themes\Generic.xaml;
 
-True
+False
 

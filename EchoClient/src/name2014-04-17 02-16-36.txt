@@ -1,0 +1,7 @@
+HR 666   |02:16:36
+_________________
+HRmax: 666
+HRmin: 666
+HRavg: 666
+O2Sat data finished collecting.
+HR 56   |02:16:45

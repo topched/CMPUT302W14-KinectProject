@@ -1,0 +1,7 @@
+---------------
+HRmin: 0
+HRmax: 0
+HRavg: 0
+OXmin: 0
+OXmax: 0
+OXavg: 0
