@@ -44,7 +44,7 @@ namespace CliniCycle
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         #region Variable declarations
-        int patientNum = 0;
+        int patientNum = 1;
 
         // Audio 
         /*WaveOut wo = new WaveOut();
@@ -84,6 +84,7 @@ namespace CliniCycle
 
         //kinect clients
         private ColorClient _videoClient;
+        private ColorClient _videoClient2;
         private AudioClient _audioClient;
 
         private Random _Random;
@@ -105,6 +106,8 @@ namespace CliniCycle
         DispatcherTimer updateCollectionTimer;
         private int i = 0;
 
+        static TcpListener listener;
+
         #endregion
 
         public MainWindow()
@@ -112,7 +115,7 @@ namespace CliniCycle
             this.InitializeComponent();
             //Loaded += OnLoaded;
 
-           // InitializeBioSockets();
+            InitializeBioSockets();
 
             //setup the kinect server
             InitializeKinect();
@@ -120,7 +123,12 @@ namespace CliniCycle
 
             InitializeECG();
             
-            this.DataContext = this;                
+            this.DataContext = this;
+
+            listener = new TcpListener(5000);
+            listener.Start();
+
+         
         }
 
         #region Kinect
@@ -139,10 +147,15 @@ namespace CliniCycle
                 var regionSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
                 BindingOperations.SetBinding(this.kinectRegion, KinectRegion.KinectSensorProperty, regionSensorBinding);
 
-                //// Receiving video from patient.
+                //// Receiving video from patient1.
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.19", 4555);
+                _videoClient.Connect("192.168.184.9", 4555);
+
+                _videoClient2 = new ColorClient();
+                _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
+                _videoClient2.Connect("192.168.184.39", 4556);
+
 
                 // kinect sending video out on port 4531
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
@@ -153,6 +166,14 @@ namespace CliniCycle
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
                 _audioClient.Connect("192.168.184.19", 4533); */
             }
+        }
+
+        void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
+        {
+            this.kinectPatientFeed2.Source = e.ColorFrame.BitmapImage;
+            if (patientNum == 2)
+                this.kinectPatientFeedLarge.Source = e.ColorFrame.BitmapImage;
+            
         }
 
        /* private void InitializeAudio()
@@ -246,7 +267,7 @@ namespace CliniCycle
                     new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
 
                 this.clinicianFeed.Source = outputImage;
-                this.kinectPatientFeedLarge.Source = inputImage1;
+                
 
             };
 
@@ -256,6 +277,8 @@ namespace CliniCycle
         {
             this.kinectPatientFeed.Source = e.ColorFrame.BitmapImage;
             buttonPatient1.Visibility = Visibility.Hidden;
+            if(patientNum == 1)
+            this.kinectPatientFeedLarge.Source = e.ColorFrame.BitmapImage;
         }
 
        /*void _audioClient_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
@@ -285,8 +308,8 @@ namespace CliniCycle
             {
                 //create listening socket
                 socketBioListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPAddress addy = System.Net.IPAddress.Parse("192.168.184.9");
-                IPEndPoint iplocal = new IPEndPoint(addy, 4449);
+                IPAddress addy = System.Net.IPAddress.Parse("192.168.184.19");
+                IPEndPoint iplocal = new IPEndPoint(addy, 5000);
                 //bind to local IP Address
                 socketBioListener.Bind(iplocal);
                 //start listening -- 4 is max connections queue, can be changed
@@ -303,6 +326,8 @@ namespace CliniCycle
         }
         private void OnBioSocketConnection(IAsyncResult asyn)
         {
+
+            //MessageBox.Show("Connection Got");
             try
             {
                 bioSocketWorker = socketBioListener.EndAccept(asyn);
@@ -343,6 +368,7 @@ namespace CliniCycle
         {
             try
             {
+               // MessageBox.Show("Data here");
                 BioSocketPacket socketID = (BioSocketPacket)asyn.AsyncState;
                 //end receive
                 int end = 0;
@@ -354,7 +380,7 @@ namespace CliniCycle
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
                 tmp = Regex.Replace(tmp, @"\t|\n|\r", " ");
-                MessageBox.Show(tmp);
+                //MessageBox.Show(tmp);
                 System.String[] name = tmp.Split('|');
                 System.String[] data = name[1].Split(' ');
                 p1 = "patient1";
@@ -511,7 +537,7 @@ namespace CliniCycle
             {
                 if (!_videoClient.IsConnected)
                 {
-                    _videoClient.Connect("192.168.184.19", 4555);
+                    _videoClient.Connect("192.168.184.9", 4555);
                 }
 
                 // Audio.
@@ -611,7 +637,8 @@ namespace CliniCycle
         }
         #endregion
 
-        #region ECG
+
+
         public void InitializeECG()
         {
             ecgPointCollection = new ECGPointCollection();
@@ -637,6 +664,7 @@ namespace CliniCycle
             ecgPointCollection.Add(new ECGPoint(_Random.NextDouble(), DateTime.Now));
         }
 
+        #region INotifyPropertyChanged members
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
@@ -644,6 +672,7 @@ namespace CliniCycle
             if (PropertyChanged != null)
                 this.PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
+
         #endregion
 
 
